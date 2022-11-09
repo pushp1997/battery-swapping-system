@@ -7,7 +7,10 @@
 	"settings": {
 		"git.autofetch": true,
 		"python.formatting.provider": "black",
-		"editor.formatOnSave": true,
+		"editor.formatOnSave": false,
+		"[python]": {
+			"editor.formatOnSave": true,
+		},
 		"python.formatting.blackArgs": [
 			"--line-length=100"
 		],
