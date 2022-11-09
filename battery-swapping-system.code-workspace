@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"git.autofetch": true,
+		"python.formatting.provider": "black",
+		"editor.formatOnSave": true,
+		"python.formatting.blackArgs": [
+			"--line-length=100"
+		],
+		"python.linting.pycodestyleEnabled": true,
+		"python.linting.pycodestyleArgs": [
+			"--max-line-length=100",
+			"--ignore=E203,W503"
+		],
+	}
+}
