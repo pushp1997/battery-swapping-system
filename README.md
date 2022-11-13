@@ -11,6 +11,9 @@ $ python -m venv env
 
 $ source env/bin/activate
 
+# For windows use the following command:
+$ .\env\Scripts\Activate.ps1
+
 $ pip install -r requirements.txt
 ```
 
