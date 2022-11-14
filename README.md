@@ -24,4 +24,4 @@ $ cd battery-swapping-system
 $ docker-compose up
 ```
 
-Now go to localhost:8000/ in your browser
+Now go to [localhost:8000](http://localhost:8000/) in your browser
