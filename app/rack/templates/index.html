@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Live: Rack</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="refresh" content="1"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1><span class="spinner-grow spinner-grow-md"></span> Live: Rack Availability</h1>
+  </div>
+  <br/>
+  {% for row in rack.shelves %}
+    <div class="row">
+      {% for col in row %}
+        <div class="col">
+          <div class="progress" style="height:100px">
+            {% if col.locked %}
+              <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-lock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
+            {% else %}
+              <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-unlock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <br/>
+  {% endfor %}
+
+</body>
+
+</html>
