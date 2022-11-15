@@ -4,4 +4,4 @@ from .models import Rack
 
 def index(request):
     context = {"rack": Rack()}
-    return render(request, "index.html", context)
+    return render(request, "rack/index.html", context)
