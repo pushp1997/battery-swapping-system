@@ -17,3 +17,8 @@ class Rack:
 
     def lock_shelf(self, i: int, j: int):
         self.shelves[i][j]["locked"] = True
+
+    def recharge(self):
+        for row in self.shelves:
+            for shelf in row:
+                shelf["level"] += 1
