@@ -21,13 +21,17 @@
     <div class="row">
       {% for col in row %}
         <div class="col">
-          <div class="progress" style="height:100px">
-            {% if col.locked %}
-              <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-lock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
-            {% else %}
-              <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-unlock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
-            {% endif %}
-          </div>
+          {% if col.present %}
+            <div class="progress" style="height:100px">
+              {% if col.locked %}
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-lock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
+              {% else %}
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated bi bi-unlock-fill" style="height:100px;width:{{ col.level }}%" text-center>{{ col.level }}%</div>
+              {% endif %}
+            </div>
+          {% else %}
+            <div class="progress-bar progress-bar-striped bg-secondary bi bi-x-octagon-fill" style="height:100px;width:100%">No Battery</div>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
