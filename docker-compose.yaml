@@ -1,16 +1,7 @@
 services:
-  mysql:
-    image: mysql
-    volumes:
-      - ./data/db:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=mydb
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin
-      - MYSQL_ROOT_PASSWORD=a_strong_password
   app:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: ["./wait-for-db.sh"]
     volumes:
       - ./app:/app
     ports:
@@ -21,3 +12,12 @@ services:
       - MYSQL_PASSWORD=admin
     depends_on:
       - mysql
+  mysql:
+    image: mysql
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=a_strong_password
