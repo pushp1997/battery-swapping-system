@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>QR Scan Successfull</h1>
+</div>
+<br />
+<div class="container">
+    <form action="/action_page.php" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="enter-pin" class="form-label">Enter Pin:</label>
+            <input type="text" class="form-control" minlength="4" maxlength="4" id="enter-pin" placeholder="Enter pin"
+                name="enter-pin">
+        </div>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="submit" class="btn btn-primary" value="cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="next">Next</button>
+        </div>
+    </form>
+</div>
+{% endblock body %}
