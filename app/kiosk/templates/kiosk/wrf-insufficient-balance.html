@@ -8,14 +8,17 @@
 <div class="container">
     <form action="/action_page.php" method="post">
         {% csrf_token %}
-        <div class="mb-3 mt-3">
-            <label for="insufficient balance" class="form-label">Insufficient Balance!</label>
+        <div class="mb-3 mt-3 justify-content-center">
+            <label for="insufficient balance" class="form-label">You have insufficient balance.
+                Please Click recharge to Top up Balance.
+            </label>
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="recharge" class="btn btn-primary" value="recharge">Recharge</button>
+            <button type="submit" class="btn btn-primary" value="recharge">Recharge</button>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="goback" class="btn btn-primary" value="goback">Go Back</button>
+            <button type="submit" class="btn btn-primary" value="goback">Go Back</button>
         </div>
     </form>
 </div>

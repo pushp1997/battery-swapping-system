@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>Withdrawal Request Success</h1>
+</div>
+<div>
+    <div class="col-sm-6 float-start"><p class="text-start"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></p></div> 
+</div>
+<br />
+<div class="container">
+    <form action="/action_page.php" method="post">
+        {% csrf_token %}
+        <div class="mb-3 mt-3 " >
+            <label for="available batteries" class="form-label" style="margin-left: -70px;">Battery Dispense Successful! </label>
+        </div>
+        <br>
+        <div class="mb-3 mt-3 text-center">
+            <label for="battery dispense statistics" class="form-label">battery Dispense Statistics: </label>
+            <label for="battery dispense statistics" class="form-label"> </label>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="submit" class="btn btn-primary" value="submit battery">Submit Battery</button>
+        </div>
+    </form>
+</div>
+{% endblock body %}

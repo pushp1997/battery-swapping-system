@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>Submit Battery</h1>
+</div>
+<div>
+    <div class="col-sm-6 float-start"><p class="text-start"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></p></div> 
+</div>
+<br />
+<div class="container">
+    <form action="/action_page.php" method="post">
+        {% csrf_token %}
+        <br>
+        <div class="mb-3 mt-3">
+            <label for="submit battery" class="form-label">No. of Batteries to Submit:</label>
+            <input type="batteries to submit" class="form-control" id="batteries_submission" placeholder="Enter no. of batteries to submit" name="batteries_submission" required>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="submit" class="btn btn-primary" value="submit_battery">Submit</button>
+        </div>
+        <br>
+    </form>
+</div>
+{% endblock body %}
