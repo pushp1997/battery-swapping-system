@@ -5,32 +5,37 @@
     <h1>User Dashboard</h1>
 </div>
 <div>
-    <div class="col-sm-6"><p class="float-start"><i class="bi bi-box-arrow-right"></i></p></div> 
+    <div class="col-sm-6 float-start"><p class="text-start"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></p></div> 
 </div>
 <br />
 <div class="container">
     <form action="/action_page.php" method="post">
         {% csrf_token %}
-        <div class="mb-3 mt-3">
-            <label for="available batteries" class="form-label">Available Batteries: </label>
+        <div class="mb-3 mt-3 " >
+            <label for="available batteries" class="form-label" style="margin-left: -70px;">Available Batteries: </label>
             <label for="avb batteries count" class="form-label"> </label>
         </div>
-        <div class="mb-3 mt-3">
+        <div class="mb-3 mt-3 text-center">
             <label for="available balance" class="form-label">Available Balance: </label>
             <label for="avb balance" class="form-label"> </label>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
             <button type="recharge account" class="btn btn-primary" value="rechargeaccount">Recharge Account</button>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="request battery" class="btn btn-primary" value="request battery">Request Battery</button>
+            <button type="request battery" class="btn btn-primary" value="request battery">
+                Request Battery</button>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit battery" class="btn btn-primary" value="submit battery">Submit Battery</button>
+            <button type="submit" class="btn btn-primary" value="submit battery">Submit Battery</button>
         </div>
-        <div> 
-            <div class="col-sm-6"><p class="float-end"><i class="bi bi-gear"></i></p></div> 
-        </div>
+        <br>
+        <!-- <div> 
+            <div class="col-sm-6 float-end"><p class="text-end"><i class="bi bi-gear" style="font-size: 2rem;"></i></p></div> 
+        </div> -->
     </form>
 </div>
 {% endblock body %}

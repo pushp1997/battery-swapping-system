@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>Battery Submission Success</h1>
+</div>
+<div>
+    <div class="col-sm-6 float-start"><p class="text-start"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></p></div> 
+</div>
+<br />
+<div class="container">
+    <form action="/action_page.php" method="post">
+        {% csrf_token %}
+        <div class="mb-3 mt-3 " >
+            <label for="battery submit success" class="form-label" style="margin-left: -70px;">Battery Submission Successful! </label>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="submit" class="btn btn-primary" value="go_back">Go back to Main Menu</button>
+        </div>
+    </form>
+</div>
+{% endblock body %}

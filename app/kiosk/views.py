@@ -50,3 +50,43 @@ def user_deposit_payment(request):
 def user_registration_success(request):
     context = {}
     return render(request, "kiosk/user-registration-success.html", context)
+
+
+def qr_scan_success(request):
+    return render(request, "kiosk/qr-scan-success.html", {})
+
+
+def wrf_insufficient_balance(request):
+    return render(request, "kiosk/wrf-insufficient-balance.html", {})
+
+
+def wrf_insufficient_batteries(request):
+    return render(request, "kiosk/wrf-insufficient-batteries.html", {})
+
+
+def wrf_insufficient_deposit(request):
+    return render(request, "kiosk/wrf-insufficient-deposit.html", {})
+
+
+def user_dashboard(request):
+    return render(request, "kiosk/user-dashboard.html", {})
+
+
+def battery_success(request):
+    return render(request, "kiosk/battery-submission-success.html", {})
+
+
+def request_battery(request):
+    return render(request, "kiosk/request-battery.html", {})
+
+
+def submit_battery(request):
+    return render(request, "kiosk/submit_battery.html", {})
+
+
+def recharge_payment(request):
+    return render(request, "kiosk/user-recharge-payment.html", {})
+
+
+def withdraw_success(request):
+    return render(request, "kiosk/withdrawal-request-success.html", {})

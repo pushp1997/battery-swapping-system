@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>Swap Battery</h1>
+</div>
+<div>
+    <div class="col-sm-6 float-start"><p class="text-start"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></p></div> 
+</div>
+<br />
+<div class="container">
+    <form action="/action_page.php" method="post">
+        {% csrf_token %}
+        <div class="mb-3 mt-3 " >
+            <label for="batteries allowed" class="form-label" style="margin-left: -70px;">Batteries allowed to withdraw: </label>
+            <label for="avb batteries count" class="form-label"> </label>
+        </div>
+        <br>
+        <div class="mb-3 mt-3">
+            <label for="batteries withdrawal" class="form-label">No. of Batteries to withdraw:</label>
+            <input type="batteries withdrawal " class="form-control" id="batteries_withdrawal" placeholder="Enter no. of batteries to withdraw" name="batteries_withdrawal" required>
+        </div>
+        <br>
+        <div class="mb-3 mt-3">
+            <label for="batteries submit" class="form-label">No. of Batteries to Submit:</label>
+            <input type="batteries submit" class="form-control" id="batteries_submit" placeholder="Enter no. of batteries to submit" name="batteries_submit" required>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="submit" class="btn btn-primary" value="submit_swap">Submit</button>
+        </div>
+        <br>
+    </form>
+</div>
+{% endblock body %}

@@ -8,17 +8,21 @@
 <div class="container">
     <form action="/action_page.php" method="post">
         {% csrf_token %}
-        <div class="mb-3 mt-3">
-            <label for="insufficient deposit" class="form-label">Insufficient Deposit!</label>
+        <div class="mb-3 mt-3 justify-content-center">
+            <label for="insufficient deposit" class="form-label">Insufficient Deposit! Please click below to pay deposit
+                or else Submit Battery to withdraw More Batteries.
+            </label>
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="pay deposit" class="btn btn-primary" value="pay-deposit">Pay Deposit</button>
+            <button type="submit" class="btn btn-primary" value="pay-deposit">Pay Deposit</button>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit battery" class="btn btn-primary" value="submit-battery">Submit Battery</button>
+            <button type="submit" class="btn btn-primary" value="submit-battery">Submit Battery</button>
         </div>
+        <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="go back" class="btn btn-primary" value="go-back">Go Back</button>
+            <button type="submit" class="btn btn-primary" value="go-back">Go Back</button>
         </div>
     </form>
 </div>
