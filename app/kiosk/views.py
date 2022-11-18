@@ -20,7 +20,7 @@ def user_registration(request):
         phone = request.POST.get("phone", "")
         password = request.POST.get("pin", "")
         password_confirmation = request.POST.get("confirm-pin", "")
-        return HttpResponseRedirect("/kiosk/user/register/deposit-payment/")
+        return HttpResponseRedirect("http://localhost:8000/kiosk/user/register/deposit-payment/")
 
     # if a GET (or any other method) we'll create a blank form
     else:
