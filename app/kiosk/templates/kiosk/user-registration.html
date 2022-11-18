@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
+    <form action="/kiosk/user/register/deposit-payment" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3">
             <label for="email" class="form-label">Email:</label>
@@ -42,7 +42,7 @@
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
             <button type="submit" class="btn btn-primary" value="cancel">Cancel</button>
-            <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="next">Next</button>
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="submit">Next</button>
         </div>
     </form>
 </div>
