@@ -10,7 +10,7 @@
         {% csrf_token %}
         <div class="mb-3 mt-3">
             <label for="deposit_amount" class="form-label">Deposit Amount:</label>
-            <input type="number" class="form-control" id="deposit_amount" placeholder="Calculated from Battery Deposit Count" name="deposit_amount" required>
+            <input type="number" class="form-control" id="deposit_amount" value="{{amount}}"  name="deposit_amount" disabled>
         </div>
         <div class="mb-3 mt-3">
             <label for="card_number" class="form-label">Card Number:</label>
@@ -30,7 +30,7 @@
                 required>
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="cancel">Cancel</button>
+            <a type="submit" class="btn btn-primary" href="{%url 'user_registration'%}" value="cancel">Cancel</a>
             <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="Payment">Proceed Payment</button>
         </div>
     </form>
