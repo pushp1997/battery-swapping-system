@@ -1,5 +1,3 @@
-from django.db import models
-
 from .exceptions import BatteryNotPresent, BatteryAlreadyPresent
 
 # Create your models here.
@@ -46,14 +44,22 @@ class Rack:
             self.shelves[row][column]["level"] = battery_level
             self.shelves[row][column]["present"] = True
 
-    def available_batteries(self) -> int:
-        count = 0
+    def rack_stats(self):
+        # avlbl, undercharged, empty slots
+        charged_batteries, undercharged_batteries, empty_slots = 0, 0, 0
+
         for row in self.shelves:
             for shelf in row:
-                if shelf["present"] and shelf["level"] > 30:
-                    count += 1
-        return count
+                if shelf["present"]:
+                    if shelf["level"] <= 30:
+                        undercharged_batteries += 1
+                    else:
+                        charged_batteries += 1
+                else:
+                    empty_slots += 1
 
-    def admin_stats(self):
-        # avlbl, undercharged, empty slots
-        return {"charged_batteries": 0, "undercharged_batteries": 0, "empty_slots": 0}
+        return {
+            "charged_batteries": charged_batteries,
+            "undercharged_batteries": undercharged_batteries,
+            "empty_slots": empty_slots,
+        }
