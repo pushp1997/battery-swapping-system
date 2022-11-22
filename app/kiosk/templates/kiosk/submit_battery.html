@@ -9,11 +9,11 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
+    <form action="{%url 'battery_submission_success'%}" method="post">
         {% csrf_token %}
         <br>
         <div class="mb-3 mt-3">
-            <label for="submit battery" class="form-label">No. of Batteries to Submit:</label>
+            <label for="batteries_submission" class="form-label">No. of Batteries to Submit:</label>
             <input type="batteries to submit" class="form-control" id="batteries_submission" placeholder="Enter no. of batteries to submit" name="batteries_submission" required>
         </div>
         <br>

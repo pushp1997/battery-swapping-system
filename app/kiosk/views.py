@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from kiosk.models import Users
+from django.template import RequestContext
 import cv2
 import base64
 import uuid
@@ -8,6 +9,7 @@ import os
 
 
 from .forms import UserForm
+from .models import Users
 
 
 def index(request):
@@ -58,13 +60,18 @@ def user_registration(request):
         password = request.POST.get("pin", "")
         password_confirmation = request.POST.get("confirm-pin", "")
         user_id = str(uuid.uuid1())
-        u = Users(user_id, name, email, license, "N", battery_deposit_count, phone, password, 0)
-        u.save()
+        # u = Users(user_id, name, email, license, "N", battery_deposit_count, phone, password, 0)
+        # u.save()
         print("Redirecting to deposit payment")
-        return render(
-            request, "kiosk/user-deposit-payment.html", {"amount": battery_deposit_count * 300}
-        )
-
+        response = redirect("/kiosk/user/register/deposit-payment/form/")
+        # response = render(
+        #     request,
+        #     "kiosk/user-deposit-payment.html",
+        #     {"amount": battery_deposit_count * 300},
+        #     RequestContext(request),
+        # )
+        response.set_cookie("battery_num", battery_deposit_count)
+        return response
     # if a GET (or any other method) we'll create a blank form
     else:
         form = UserForm()
@@ -74,21 +81,23 @@ def user_registration(request):
 
 # view for battery deposit payment based on the deposit count
 def user_deposit_payment(request):
-    # if this is a POST request we need to process the form data
-    print("Redirected to deposit payment")
-    if request.method == "POST":
-        print("inside post logic")
-        deposit_amount = request.POST.get("deposit_amount", "")
-        card_number = request.POST.get("card_number", "")
-        name_on_card = request.POST.get("name_on_card", "")
-        cvv = request.POST.get("cvv", "")
-        expiry = request.POST.get("expiry", "")
-        return redirect("/kiosk/user/register/success/")
+    deposit_amount = request.POST.get("deposit_amount", "")
+    card_number = request.POST.get("card_number", "")
+    name_on_card = request.POST.get("name_on_card", "")
+    cvv = request.POST.get("cvv", "")
+    expiry = request.POST.get("expiry", "")
+    return redirect("/kiosk/user/register/success/")
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        print("inside get logic")
-        form = UserForm()
+
+def user_deposit_payment_form(request):
+    form = UserForm()
+    if "battery_num" in request.COOKIES:
+        battery_num = int(request.COOKIES["battery_num"])
+        return render(
+            request,
+            "kiosk/user-deposit-payment.html",
+            {"amount": battery_num * 300},
+        )
 
     return render(request, "kiosk/user-deposit-payment.html", {"form": form})
 
@@ -116,7 +125,8 @@ def wrf_insufficient_deposit(request):
 
 
 def user_dashboard(request):
-    return render(request, "kiosk/user-dashboard.html", {})
+    user = Users.objects.all()
+    return render(request, "kiosk/user-dashboard.html", {'user': user})
 
 
 def battery_success(request):
@@ -128,11 +138,32 @@ def request_battery(request):
 
 
 def submit_battery(request):
-    return render(request, "kiosk/submit_battery.html", {})
+    if request.method == "POST":
+        batteries_submitted = request.POST.get("batteries_submission", "")
+        return redirect("/kiosk/user/battery/submission/success/")
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = UserForm()
+
+    return render(request, "kiosk/submit_battery.html", {"form": form})
 
 
 def recharge_payment(request):
-    return render(request, "kiosk/user-recharge-payment.html", {})
+    # if this is a POST request we need to process the form data
+    if request.method == "POST":
+        recharge_amount = request.POST.get("recharge_amount", "")
+        card_number = request.POST.get("card_number", "")
+        name_on_card = request.POST.get("name_on_card", "")
+        cvv = request.POST.get("cvv", "")
+        expiry = request.POST.get("expiry", "")
+        return redirect("/kiosk/user/dashboard/")
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = UserForm()
+
+    return render(request, "kiosk/user-recharge-payment.html", {"form": form})
 
 
 def withdraw_success(request):
