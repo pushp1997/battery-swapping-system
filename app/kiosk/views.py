@@ -52,12 +52,15 @@ def user_registration(request):
     if request.method == "POST":
         email = request.POST.get("email", "")
         name = request.POST.get("name", "")
-        battery_deposit_count = request.POST.get("deposit-count", "")
+        battery_deposit_count = int(request.POST.get("deposit-count", ""))
         license = request.POST.get("license", "")
         phone = request.POST.get("phone", "")
         password = request.POST.get("pin", "")
         password_confirmation = request.POST.get("confirm-pin", "")
-        return redirect("/kiosk/user/register/deposit-payment/")
+        print("Redirecting to deposit payment")
+        return render(
+            request, "kiosk/user-deposit-payment.html", {"amount": battery_deposit_count * 300}
+        )
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -69,7 +72,9 @@ def user_registration(request):
 # view for battery deposit payment based on the deposit count
 def user_deposit_payment(request):
     # if this is a POST request we need to process the form data
+    print("Redirected to deposit payment")
     if request.method == "POST":
+        print("inside post logic")
         deposit_amount = request.POST.get("deposit_amount", "")
         card_number = request.POST.get("card_number", "")
         name_on_card = request.POST.get("name_on_card", "")
@@ -79,6 +84,7 @@ def user_deposit_payment(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
+        print("inside get logic")
         form = UserForm()
 
     return render(request, "kiosk/user-deposit-payment.html", {"form": form})

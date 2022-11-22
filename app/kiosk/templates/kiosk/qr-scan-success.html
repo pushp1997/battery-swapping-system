@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
+    <form action="/kiosk/user/dashboard/" method="post">
         {% csrf_token %}
         <div class="mb-3">
             <label for="enter-pin" class="form-label">Enter Pin:</label>
@@ -14,7 +14,7 @@
                 name="enter-pin">
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="cancel">Cancel</button>
+            <a type="submit" class="btn btn-primary" href="{%url 'kiosk_index'%}" value="cancel">Cancel</a>
             <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="next">Next</button>
         </div>
     </form>

@@ -8,5 +8,6 @@ class Users(models.Model):
     email_id = models.CharField(max_length=45, unique=True, null=False)
     phone_no = models.CharField(max_length=15, null=False)
     driving_license = models.CharField(max_length=45, null=False, unique=True)
-    battery_deposit_count = models.IntegerField(default=0, null=True)
+    battery_deposit_count = models.IntegerField(null=True)
+    user_recharge = models.IntegerField(null=True, default=0)
     admin_flag = models.BooleanField(null=False, default="False")
