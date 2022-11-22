@@ -9,37 +9,31 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="available batteries" class="form-label" style="margin-left: -70px;">Available Batteries: </label>
             <label for="avb batteries count" class="form-label">{{ user }}</label>
-            <!-- <input id="available batteries" type="text" name="available_batteries" value="{{ user }}"> -->
-            <!-- {% block content %}  -->
-            <!-- {{  user }}  -->
-            <!-- {% endblock %} -->
         </div>
         <div class="mb-3 mt-3 text-center">
             <label for="available balance" class="form-label">Available Balance: </label>
             <label for="avb balance" class="form-label">{{ user }}</label>
         </div>
+        <br> 
+        <div class="d-flex justify-content-center flex-nowrap">
+            <a type="recharge account" class="btn btn-primary" href="{%url 'recharge_account'%}" value="recharge account">Recharge Account</a>
+        </div> 
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="recharge account" class="btn btn-primary" value="rechargeaccount" formaction="../recharge/">Recharge Account</button>
+            <a type="request battery" class="btn btn-primary" href="{%url 'request_battery'%}" value="request battery">Request Battery</a>
+
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="request battery" class="btn btn-primary" value="request battery" formaction="../battery/request/">
-                Request Battery</button>
-        </div>
-        <br>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="submit battery" formaction="../battery/submission/">Submit Battery</button>
+            <a type="submit battery" class="btn btn-primary" href="{%url 'submit_battery'%}" value="submit battery">Submit Battery</a>
         </div>
         <br>
         <!-- <div> 
             <div class="col-sm-6 float-end"><p class="text-end"><i class="bi bi-gear" style="font-size: 2rem;"></i></p></div> 
         </div> -->
-    </form>
 </div>
 {% endblock body %}

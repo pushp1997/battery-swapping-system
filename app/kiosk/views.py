@@ -126,7 +126,15 @@ def request_battery(request):
 
 
 def submit_battery(request):
-    return render(request, "kiosk/submit_battery.html", {})
+    if request.method == "POST":
+        batteries_submitted = request.POST.get("batteries_submission", "")
+        return redirect("/kiosk/user/battery/submission/success/")
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = UserForm()
+
+    return render(request, "kiosk/submit_battery.html", {"form": form})
 
 
 def recharge_payment(request):
@@ -137,7 +145,7 @@ def recharge_payment(request):
         name_on_card = request.POST.get("name_on_card", "")
         cvv = request.POST.get("cvv", "")
         expiry = request.POST.get("expiry", "")
-        return redirect("/kiosk/user/register/success/")
+        return redirect("/kiosk/user/dashboard/")
 
     # if a GET (or any other method) we'll create a blank form
     else:
