@@ -7,6 +7,7 @@ import os
 
 
 from .forms import UserForm
+from .models import Users
 
 
 def index(request):
@@ -106,7 +107,8 @@ def wrf_insufficient_deposit(request):
 
 
 def user_dashboard(request):
-    return render(request, "kiosk/user-dashboard.html", {})
+    user = Users.objects.all()
+    return render(request, "kiosk/user-dashboard.html", {'user': user})
 
 
 def battery_success(request):
@@ -122,7 +124,20 @@ def submit_battery(request):
 
 
 def recharge_payment(request):
-    return render(request, "kiosk/user-recharge-payment.html", {})
+    # if this is a POST request we need to process the form data
+    if request.method == "POST":
+        recharge_amount = request.POST.get("recharge_amount", "")
+        card_number = request.POST.get("card_number", "")
+        name_on_card = request.POST.get("name_on_card", "")
+        cvv = request.POST.get("cvv", "")
+        expiry = request.POST.get("expiry", "")
+        return redirect("/kiosk/user/register/success/")
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = UserForm()
+
+    return render(request, "kiosk/user-recharge-payment.html", {"form": form})
 
 
 def withdraw_success(request):

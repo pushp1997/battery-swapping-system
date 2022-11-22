@@ -13,24 +13,28 @@
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="available batteries" class="form-label" style="margin-left: -70px;">Available Batteries: </label>
-            <label for="avb batteries count" class="form-label"> </label>
+            <label for="avb batteries count" class="form-label">{{ user }}</label>
+            <!-- <input id="available batteries" type="text" name="available_batteries" value="{{ user }}"> -->
+            <!-- {% block content %}  -->
+            <!-- {{  user }}  -->
+            <!-- {% endblock %} -->
         </div>
         <div class="mb-3 mt-3 text-center">
             <label for="available balance" class="form-label">Available Balance: </label>
-            <label for="avb balance" class="form-label"> </label>
+            <label for="avb balance" class="form-label">{{ user }}</label>
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="recharge account" class="btn btn-primary" value="rechargeaccount">Recharge Account</button>
+            <button type="recharge account" class="btn btn-primary" value="rechargeaccount" formaction="../recharge/">Recharge Account</button>
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="request battery" class="btn btn-primary" value="request battery">
+            <button type="request battery" class="btn btn-primary" value="request battery" formaction="../battery/request/">
                 Request Battery</button>
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="submit battery">Submit Battery</button>
+            <button type="submit" class="btn btn-primary" value="submit battery" formaction="../battery/submission/">Submit Battery</button>
         </div>
         <br>
         <!-- <div> 
