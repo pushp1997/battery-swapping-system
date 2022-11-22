@@ -51,14 +51,12 @@ def decode_camera_feed(request):
 def user_registration(request):
     # if this is a POST request we need to process the form data
     if request.method == "POST":
-        email = request.POST.get("email", "")
+        email_id = request.POST.get("email", "")
         name = request.POST.get("name", "")
         battery_deposit_count = int(request.POST.get("deposit-count", ""))
-        license = request.POST.get("license", "")
-        phone = request.POST.get("phone", "")
-        password = request.POST.get("pin", "")
-        password_confirmation = request.POST.get("confirm-pin", "")
-        user_id = str(uuid.uuid1())
+        driving_license = request.POST.get("license", "")
+        phone_no = request.POST.get("phone", "")
+        pin = request.POST.get("pin", "")
         # u = Users(user_id, name, email, license, "N", battery_deposit_count, phone, password, 0)
         # u.save()
         print("Redirecting to deposit payment")
@@ -69,7 +67,12 @@ def user_registration(request):
         #     {"amount": battery_deposit_count * 300},
         #     RequestContext(request),
         # )
+        response.set_cookie("email", email_id)
+        response.set_cookie("name", name)
         response.set_cookie("battery_num", battery_deposit_count)
+        response.set_cookie("license", driving_license)
+        response.set_cookie("phone", phone_no)
+        response.set_cookie("pin", pin)
         return response
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -85,18 +88,47 @@ def user_deposit_payment(request):
     name_on_card = request.POST.get("name_on_card", "")
     cvv = request.POST.get("cvv", "")
     expiry = request.POST.get("expiry", "")
+
+    # u = Users(
+    #     email_id=request.COOKIES["email"],
+    #     name=request.COOKIES["name"],
+    #     battery_deposit_count=int(request.COOKIES["battery_num"]),
+    #     driving_license=request.COOKIES["license"],
+    #     phone_no=request.COOKIES["phone"],
+    #     pin=int(request.COOKIES["pin"]),
+    # )
+    # u.save()
+
+    # u = Users()
+    # u.battery_num = int(request.COOKIES["battery_num"])
+    # u.email = request.COOKIES["email"]
+    # u.name = request.COOKIES["name"]
+    # u.license = request.COOKIES["license"]
+    # u.phone = request.COOKIES["phone"]
+    # u.pin = int(request.COOKIES["pin"])
+    # # u = Users(name, email, license, "N", battery_num, phone, pin, 0)
+    # u.save()
+
     return redirect("/kiosk/user/register/success/")
 
 
 def user_deposit_payment_form(request):
     form = UserForm()
     if "battery_num" in request.COOKIES:
+        print("IN DEPOSIT: ", request.COOKIES)
         battery_num = int(request.COOKIES["battery_num"])
-        return render(
+        response = render(
             request,
             "kiosk/user-deposit-payment.html",
             {"amount": battery_num * 300},
         )
+        response.set_cookie("email", request.COOKIES["email"])
+        response.set_cookie("name", request.COOKIES["name"])
+        response.set_cookie("battery_num", request.COOKIES["battery_num"])
+        response.set_cookie("license", request.COOKIES["license"])
+        response.set_cookie("phone", request.COOKIES["phone"])
+        response.set_cookie("pin", request.COOKIES["pin"])
+        return response
 
     return render(request, "kiosk/user-deposit-payment.html", {"form": form})
 
