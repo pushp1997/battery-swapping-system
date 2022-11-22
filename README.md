@@ -38,6 +38,8 @@ $ code battery-swapping-system.code-workspace
 $ cd battery-swapping-system
 
 $ docker-compose up
+
+$ docker exec -it battery-swapping-system-app-1 python manage.py migrate
 ```
 
 Now go to [localhost:8000](http://localhost:8000/) in your browser

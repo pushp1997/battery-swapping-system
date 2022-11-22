@@ -4,4 +4,7 @@ from django.contrib import admin
 
 from kiosk.models import Users
 
+from rack.models import Rack
+
 admin.site.register(Users)
+admin.site.register(Rack)

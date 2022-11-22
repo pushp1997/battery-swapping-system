@@ -133,3 +133,5 @@ dmypy.json
 
 # Postgres DB
 /data
+
+.vscode/
