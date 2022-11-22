@@ -9,4 +9,5 @@ class Users(models.Model):
     phone_no = models.CharField(max_length=15, null=False)
     driving_license = models.CharField(max_length=45, null=False, unique=True)
     battery_deposit_count = models.IntegerField(max_length=5, null=True)
+    user_balance = models.IntegerField(null=True, default=0)
     admin_flag = models.BooleanField(null=False, default="False")
