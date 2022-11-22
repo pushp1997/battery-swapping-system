@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from kiosk.models import Users
 import cv2
 import base64
 import uuid
@@ -56,6 +57,9 @@ def user_registration(request):
         phone = request.POST.get("phone", "")
         password = request.POST.get("pin", "")
         password_confirmation = request.POST.get("confirm-pin", "")
+        user_id = str(uuid.uuid1())
+        u = Users(user_id, name, email, license, "N", battery_deposit_count, phone, password, 0)
+        u.save()
         print("Redirecting to deposit payment")
         return render(
             request, "kiosk/user-deposit-payment.html", {"amount": battery_deposit_count * 300}
