@@ -1,8 +1,9 @@
+import uuid
 from django.db import models
 
 # create the Kiosk_user table
 class Users(models.Model):
-    user_id = models.UUIDField(primary_key=True)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pin = models.IntegerField(null=False)
     name = models.CharField(max_length=45, null=False)
     email_id = models.CharField(max_length=45, unique=True, null=False)
