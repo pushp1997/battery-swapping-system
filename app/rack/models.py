@@ -53,3 +53,7 @@ class Rack:
                 if shelf["present"] and shelf["level"] > 30:
                     count += 1
         return count
+
+    def admin_stats():
+        # avlbl, undercharged, empty slots
+        return {"charged_batteries": 0, "undercharged_batteries": 0, "empty_slots": 0}
