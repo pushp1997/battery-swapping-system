@@ -54,6 +54,6 @@ class Rack:
                     count += 1
         return count
 
-    def admin_stats():
+    def admin_stats(self):
         # avlbl, undercharged, empty slots
         return {"charged_batteries": 0, "undercharged_batteries": 0, "empty_slots": 0}
