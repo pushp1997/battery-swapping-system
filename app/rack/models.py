@@ -45,3 +45,11 @@ class Rack:
         else:
             self.shelves[row][column]["level"] = battery_level
             self.shelves[row][column]["present"] = True
+
+    def available_batteries(self) -> int:
+        count = 0
+        for row in self.shelves:
+            for shelf in row:
+                if shelf["present"] and shelf["level"] > 30:
+                    count += 1
+        return count
