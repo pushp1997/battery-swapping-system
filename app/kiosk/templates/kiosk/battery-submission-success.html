@@ -9,7 +9,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
+    <form action="{%url 'user_dashboard'%}" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="battery submit success" class="form-label" style="margin-left: -70px;">Battery Submission Successful! </label>

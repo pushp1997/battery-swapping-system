@@ -6,11 +6,11 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action.php" method="post">
+    <form action="../dashboard/" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3">
-            <label for="deposit_amount" class="form-label">Recharge Amount:</label>
-            <input type="number" class="form-control" id="deposit_amount" placeholder="Recharge Amount" name="deposit_amount" required>
+            <label for="recharge_amount" class="form-label">Recharge Amount:</label>
+            <input type="number" class="form-control" id="recharge_amount" placeholder="Recharge Amount" name="recharge_amount" required>
         </div>
         <div class="mb-3 mt-3">
             <label for="card_number" class="form-label">Card Number:</label>
@@ -18,11 +18,11 @@
         </div>
         <div class="mb-3 mt-3">
             <label for="name_on_card" class="form-label">Name on the card:</label>
-            <input type="text" class="form-control" id="name_on_card" placeholder="Enter name on the card" name="deposit-count" required>
+            <input type="text" class="form-control" id="name_on_card" placeholder="Enter name on the card" name="name_on_card" required>
         </div>
         <div class="mb-3 mt-3">
             <label for="cvv" class="form-label">CVV:</label>
-            <input type="password" class="form-control" id="cvv" maxlength="3" pattern="([0-9]|[0-9]|[0-9])" placeholder="xxx" name="cvv" required>
+            <input type="password" class="form-control" id="cvv" maxlength="3"  placeholder="xxx" name="cvv" required>
         </div>
         <div class="mb-3 mt-3">
             <label for="expiry" class="form-label">Expiry month and year:</label>
@@ -30,7 +30,7 @@
                 required>
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="cancel">Cancel</button>
+            <a type="cancel" class="btn btn-primary" href="{%url 'user_dashboard'%}" value="cancel">Cancel</a>
             <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="Payment">Proceed Payment</button>
         </div>
     </form>

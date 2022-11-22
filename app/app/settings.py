@@ -31,9 +31,10 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "admin.apps.AdminConfig",
     "kiosk.apps.KioskConfig",
     "rack.apps.RackConfig",
-    "django.contrib.admin",
+    # "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",

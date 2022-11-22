@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>Admin Dashboard</h1>
+</div>
+<div>
+    <div class="col-sm-6 float-start">
+        <p class="text-start">
+            <a class="bi bi-box-arrow-left" href="{%url 'admin_login'%}" style="font-size: 2rem;"></a>
+        </p>
+    </div> 
+</div>
+<br />
+<div class="container">
+    <form action="/admin/dashboard" method="post">
+        {% csrf_token %}
+        <br>
+        <br>
+        <div class="mb-3 mt-3 text-center">
+            <label for="rack statistics" class="form-label">
+                Available Batteries above Threshold: </label>
+            <label for="rack statistics" id = "charged_batteries" class="form-label"> </label>
+        <div class="mb-3 mt-3 text-center">
+            <label for="rack statistics" class="form-label">
+                Available Batteries below Threshold: </label>
+            <label for="rack statistics" id = "undercharged_batteries" class="form-label"> </label>
+        <div class="mb-3 mt-3 text-center">
+            <label for="rack statistics" class="form-label">
+                Empty slots out of 25</label>
+            <label for="rack statistics" id = "empty_shelves" class="form-label"> </label>
+        </div>
+    </form>
+</div>
+{% endblock body %}
