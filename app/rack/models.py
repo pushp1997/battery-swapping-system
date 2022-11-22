@@ -46,7 +46,7 @@ class Rack:
 
     def rack_stats(self):
         # avlbl, undercharged, empty slots
-        charged_batteries, undercharged_batteries, empty_slots = 0, 0, 0
+        charged_batteries, undercharged_batteries, empty_shelves = 0, 0, 0
 
         for row in self.shelves:
             for shelf in row:
@@ -56,10 +56,10 @@ class Rack:
                     else:
                         charged_batteries += 1
                 else:
-                    empty_slots += 1
+                    empty_shelves += 1
 
         return {
             "charged_batteries": charged_batteries,
             "undercharged_batteries": undercharged_batteries,
-            "empty_slots": empty_slots,
+            "empty_shelves": empty_shelves,
         }
