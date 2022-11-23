@@ -6,10 +6,10 @@ services:
       - ./app:/app
     ports:
       - "8000:8000"
-    environment:
-      - MYSQL_DATABASE=mydb
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin
+    env_file:
+      - dev.env
+      # Uncomment the below line to use centralised DB (usefull for demo purpose) and comment the above line
+      # - stage.env
     depends_on:
       - mysql
   mysql:
