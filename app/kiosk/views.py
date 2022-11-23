@@ -164,6 +164,7 @@ def user_dashboard(request):
     print("In user dashboard ", newuserid)
     req_user_data = user.get(user_id=newuserid)
     available_balance = req_user_data.user_recharge
+    allowed_batteries = req_user_data.allowed_batteries
 
     rack_stats_dict = Rack().rack_stats()
     charged_batteries = rack_stats_dict.get("charged_batteries")
@@ -171,7 +172,7 @@ def user_dashboard(request):
     return render(
         request,
         "kiosk/user-dashboard.html",
-        {"charged_batteries": charged_batteries, "available_balance": available_balance},
+        {"charged_batteries": charged_batteries, "available_balance": available_balance, "allowed_batteries": allowed_batteries},
     )
 
 

@@ -10,12 +10,16 @@
 <br />
 <div class="container">
         <div class="mb-3 mt-3 " >
-            <label for="available batteries" class="form-label" style="margin-left: -70px;">Available Batteries: </label>
+            <label for="available batteries" class="form-label" style="margin-left: -70px;">Available Batteries in rack: </label>
             <label for="avb batteries count" class="form-label">{{ charged_batteries }}</label>
         </div>
         <div class="mb-3 mt-3 text-center">
             <label for="available balance" class="form-label">Available Balance: </label>
             <label for="avb balance" class="form-label">{{ available_balance }}</label>
+        </div>
+        <div class="mb-3 mt-3 text-center">
+            <label for="available balance" class="form-label">Batteries allowed to withdraw: </label>
+            <label for="avb balance" class="form-label">{{ allowed_batteries }}</label>
         </div>
         <br> 
         <div class="d-flex justify-content-center flex-nowrap">
