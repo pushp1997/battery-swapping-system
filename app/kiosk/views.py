@@ -88,16 +88,20 @@ def user_deposit_payment(request):
     if payment_success:
         if "battery_num" in request.COOKIES:
             deposit_for_new_user = True
-            u = Users(
-                email_id=request.COOKIES["email"],
-                name=request.COOKIES["name"],
-                battery_deposit_count=int(request.COOKIES["battery_num"]),
-                driving_license=request.COOKIES["license"],
-                phone_no=request.COOKIES["phone"],
-                pin=int(request.COOKIES["pin"]),
-            )
-            u.save()
-
+            try:
+                u = Users(
+                    email_id=request.COOKIES["email"],
+                    name=request.COOKIES["name"],
+                    battery_deposit_count=int(request.COOKIES["battery_num"]),
+                    driving_license=request.COOKIES["license"],
+                    phone_no=request.COOKIES["phone"],
+                    pin=int(request.COOKIES["pin"]),
+                )
+                u.save()
+            except Exception:
+                e = sys.exc_info()[0]
+                print("I am the exception", e)
+                raise User_Already_Exists_Email
         response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
     else:
         raise Payment_Failed
