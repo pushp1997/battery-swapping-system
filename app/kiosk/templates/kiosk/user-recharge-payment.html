@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="../dashboard/" method="post">
+    <form action="{%url 'recharge_account'%}" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3">
             <label for="recharge_amount" class="form-label">Recharge Amount:</label>

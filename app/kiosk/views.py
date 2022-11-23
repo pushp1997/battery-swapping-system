@@ -1,12 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from kiosk.models import Users
+from django.forms import Form
+import string
+from .forms import UserForm
 import qrcode
 from io import BytesIO
 import cv2
 import base64
 import uuid
 import os
+from rack.models import Rack
 
 
 from .models import Users
@@ -137,7 +141,20 @@ def wrf_insufficient_deposit(request):
 
 def user_dashboard(request):
     user = Users.objects.all()
-    return render(request, "kiosk/user-dashboard.html", {"user": user})
+    userid = request.COOKIES["user_id"]
+    newuserid = userid.replace("-", "")
+    print("In user dashboard ", newuserid)
+    req_user_data = user.get(user_id=newuserid)
+    available_balance = req_user_data.user_recharge
+
+    rack_stats_dict = Rack().rack_stats()
+    charged_batteries = rack_stats_dict.get("charged_batteries")
+
+    return render(
+        request,
+        "kiosk/user-dashboard.html",
+        {"charged_batteries": charged_batteries, "available_balance": available_balance},
+    )
 
 
 def battery_success(request):
@@ -168,8 +185,17 @@ def recharge_payment(request):
         name_on_card = request.POST.get("name_on_card", "")
         cvv = request.POST.get("cvv", "")
         expiry = request.POST.get("expiry", "")
-        return redirect("/kiosk/user/dashboard/")
 
+        userid = request.COOKIES["user_id"]
+        newuserid = userid.replace("-", "")
+        req_user = Users.objects.get(user_id=newuserid)
+        userRecharge = req_user.user_recharge
+        available_balance = userRecharge + int(recharge_amount)
+        req_user.user_recharge = available_balance
+        req_user.save()
+        response = redirect("/kiosk/user/dashboard/")
+        # response.set_cookie("user_recharge", available_balance)
+        return response
     # if a GET (or any other method) we'll create a blank form
     else:
         form = UserForm()
