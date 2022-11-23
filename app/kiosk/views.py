@@ -52,7 +52,7 @@ def user_registration(request):
     if request.method == "POST":
         email_id = request.POST.get("email", "")
         name = request.POST.get("name", "")
-        battery_deposit_count = int(request.POST.get("deposit-count", ""))
+        allowed_batteries = int(request.POST.get("deposit-count", ""))
         driving_license = request.POST.get("license", "")
         phone_no = request.POST.get("phone", "")
         pin = request.POST.get("pin", "")
@@ -60,7 +60,7 @@ def user_registration(request):
         response = redirect("/kiosk/user/register/deposit-payment/form/")
         response.set_cookie("email", email_id)
         response.set_cookie("name", name)
-        response.set_cookie("battery_num", battery_deposit_count)
+        response.set_cookie("battery_num", allowed_batteries)
         response.set_cookie("license", driving_license)
         response.set_cookie("phone", phone_no)
         response.set_cookie("pin", pin)
@@ -88,20 +88,16 @@ def user_deposit_payment(request):
     if payment_success:
         if "battery_num" in request.COOKIES:
             deposit_for_new_user = True
-            try:
-                u = Users(
-                    email_id=request.COOKIES["email"],
-                    name=request.COOKIES["name"],
-                    battery_deposit_count=int(request.COOKIES["battery_num"]),
-                    driving_license=request.COOKIES["license"],
-                    phone_no=request.COOKIES["phone"],
-                    pin=int(request.COOKIES["pin"]),
-                )
-                u.save()
-            except Exception:
-                e = sys.exc_info()[0]
-                print("I am the exception", e)
-                raise User_Already_Exists_Email
+            u = Users(
+                email_id=request.COOKIES["email"],
+                name=request.COOKIES["name"],
+                battery_deposit_count=int(request.COOKIES["battery_num"]),
+                driving_license=request.COOKIES["license"],
+                phone_no=request.COOKIES["phone"],
+                pin=int(request.COOKIES["pin"]),
+            )
+            u.save()
+
         response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
     else:
         raise Payment_Failed
