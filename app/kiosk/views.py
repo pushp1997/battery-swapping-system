@@ -1,7 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from kiosk.models import Users
-from django.template import RequestContext
 import qrcode
 from io import BytesIO
 import cv2
@@ -15,24 +14,11 @@ from .models import Users
 
 
 def index(request):
-    context = {}
-    return render(request, "kiosk/index.html", context)
+    return render(request, "kiosk/index.html", {})
 
 
 def user_login(request):
-    # stream = CameraStreamingWidget()
-    # success, _ = stream.camera.read()
-    # if success:
-    #     status = True
-    # else:
-    #     status = False
     return render(request, "kiosk/user-login.html", {})
-
-
-# def decode_camera_feed(request):
-#     stream = CameraStreamingWidget()
-#     frames = stream.get_frames()
-#     return StreamingHttpResponse(frames, content_type="multipart/x-mixed-replace; boundary=frame")
 
 
 def decode_camera_feed(request):
@@ -69,11 +55,9 @@ def user_registration(request):
         response.set_cookie("phone", phone_no)
         response.set_cookie("pin", pin)
         return response
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = UserForm()
 
-    return render(request, "kiosk/user-registration.html", {"form": form})
+    # if a GET (or any other method) we'll render a blank form
+    return render(request, "kiosk/user-registration.html", {})
 
 
 # view for battery deposit payment based on the deposit count
