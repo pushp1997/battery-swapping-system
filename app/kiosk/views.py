@@ -180,12 +180,48 @@ def battery_success(request):
 
 
 def request_battery(request):
-    return render(request, "kiosk/request-battery.html", {})
+    user = Users.objects.all()
+    userid = request.COOKIES["user_id"]
+    newuserid = userid.replace("-", "")
+    req_user_data = user.get(user_id=newuserid)
+    allowed_batteries = req_user_data.allowed_batteries
+
+    if request.method == "POST":
+        batteries_withdrawal = int(request.POST.get("batteries_withdrawal", ""))
+        batteries_submit = request.POST.get("batteries_submit", "")
+        rack_stats_dict = Rack().rack_stats()
+        charged_batteries = rack_stats_dict.get("charged_batteries")
+
+        # insufficient deposit
+        if req_user_data.allowed_batteries < batteries_withdrawal :
+            return render(request, "kiosk/wrf-insufficient-deposit.html", {})
+        # insufficience user account balance
+        elif req_user_data.user_recharge < batteries_withdrawal * 300 :
+            return render(request, "kiosk/wrf-insufficient-balance.html", {})
+        # insufficient available batteries in rack
+        elif charged_batteries < batteries_withdrawal :
+            return render(request, "kiosk/wrf-insufficient-batteries.html", {})
+        # withdrawal success
+        else:
+            req_user_data.allowed_batteries = allowed_batteries - batteries_withdrawal
+            req_user_data.save()
+            return render(request, "kiosk/withdrawal-request-success.html", {})
+           
+    else:
+        return render(request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries})
 
 
 def submit_battery(request):
     if request.method == "POST":
         batteries_submitted = request.POST.get("batteries_submission", "")
+        user = Users.objects.all()
+        userid = request.COOKIES["user_id"]
+        newuserid = userid.replace("-", "")
+        req_user_data = user.get(user_id=newuserid)
+        allowed_batteries = req_user_data.allowed_batteries #nam change krna padega
+        allowed_batteries += int(batteries_submitted)
+        req_user_data.allowed_batteries = allowed_batteries
+        req_user_data.save()
         return redirect("/kiosk/user/battery/submission/success/")
 
     # if a GET (or any other method) we'll create a blank form
@@ -208,9 +244,8 @@ def recharge_payment(request):
         available_balance = userRecharge + int(recharge_amount)
         req_user.user_recharge = available_balance
         req_user.save()
-        response = redirect("/kiosk/user/dashboard/")
-        # response.set_cookie("user_recharge", available_balance)
-        return response
+        return redirect("/kiosk/user/dashboard/")
+
     # if a GET (or any other method) we'll create a blank form
     return render(request, "kiosk/user-recharge-payment.html", {})
 

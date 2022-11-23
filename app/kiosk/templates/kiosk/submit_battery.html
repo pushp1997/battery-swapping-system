@@ -9,7 +9,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="{%url 'battery_submission_success'%}" method="post">
+    <form action="{%url 'submit_battery'%}" method="post">
         {% csrf_token %}
         <br>
         <div class="mb-3 mt-3">
@@ -18,7 +18,7 @@
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <a type="back" class="btn btn-primary" value="back">Back</a>
+            <a type="back" class="btn btn-primary" href="{%url 'user_dashboard'%}" value="back">Dashboard</a>
             <button type="submit" class="btn btn-primary" value="submit_battery">Submit</button>
         </div>
         

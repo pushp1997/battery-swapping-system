@@ -9,11 +9,11 @@
 </div>
 <br />
 <div class="container">
-    <form action="{%url 'withdrawal_success'%}" method="post">
+    <form action="{%url 'request_battery'%}" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="batteries allowed" class="form-label" style="margin-left: -70px;">Batteries allowed to withdraw: </label>
-            <label for="avb batteries count" class="form-label"> </label>
+            <label for="avb batteries count" class="form-label">{{allowed_batteries}} </label>
         </div>
         <br>
         <div class="mb-3 mt-3">
@@ -27,6 +27,7 @@
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
+            <a type="back" class="btn btn-primary" href="{%url 'user_dashboard'%}" value="back">Dashboard</a>
             <button type="submit" class="btn btn-primary" value="submit_swap">Submit</button>
         </div>
         <br>

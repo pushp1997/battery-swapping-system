@@ -6,14 +6,12 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
-        {% csrf_token %}
-        <div class="mb-3 mt-3 justify-content-center">
-            <label for="invalid choice" class="form-label">Invalid Choice! Please Select Valid Number of Batteries.</label>
-        </div>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="tryagain">Try Again!</button>
-        </div>
-    </form>
+    {% csrf_token %}
+    <div class="mb-3 mt-3 justify-content-center">
+        <label for="invalid choice" class="form-label">Sorry, try again! Insufficient number of batteries available.</label>
+    </div>
+    <div class="d-flex justify-content-center flex-nowrap">
+        <a type="back" class="btn btn-primary" href="{%url 'request_battery'%}" value="goback">Try Again!</a>
+    </div>
 </div>
 {% endblock body %}

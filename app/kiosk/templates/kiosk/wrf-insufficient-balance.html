@@ -6,20 +6,18 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
-        {% csrf_token %}
-        <div class="mb-3 mt-3 justify-content-center">
-            <label for="insufficient balance" class="form-label">You have insufficient balance.
-                Please Click recharge to Top up Balance.
-            </label>
-        </div>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="recharge">Recharge</button>
-        </div>
-        <br>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <a type="back" class="btn btn-primary" value="goback">Go Back</a>
-        </div>
-    </form>
+    {% csrf_token %}
+    <div class="mb-3 mt-3 justify-content-center">
+        <label for="insufficient balance" class="form-label">You have insufficient balance.
+            <br>Please Click recharge to Top up Balance.
+        </label>
+    </div>
+    <div class="d-flex justify-content-center flex-nowrap">
+        <a type="recharge account" class="btn btn-primary" href="{%url 'recharge_account'%}" value="recharge account">Recharge</a>
+    </div>
+    <br>
+    <div class="d-flex justify-content-center flex-nowrap">
+        <a type="back" class="btn btn-primary" href="{%url 'request_battery'%}" value="goback">Go Back</a>
+    </div>
 </div>
 {% endblock body %}
