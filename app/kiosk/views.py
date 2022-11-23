@@ -9,7 +9,6 @@ import uuid
 import os
 
 
-from .forms import UserForm
 from .models import Users
 
 
@@ -119,8 +118,9 @@ def user_registration_success(request, user_id):
 
 
 def qr_scan_success(request, user_id):
-    print(user_id)
-    return render(request, "kiosk/qr-scan-success.html", {})
+    response = render(request, "kiosk/qr-scan-success.html", {})
+    response.set_cookie("user_id", user_id)
+    return response
 
 
 def wrf_insufficient_balance(request):
