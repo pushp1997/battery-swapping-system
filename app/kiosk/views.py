@@ -2,6 +2,13 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from kiosk.models import Users
 from django.forms import Form
+from .exception import (
+    User_Already_Exists_Email,
+    User_Already_Exists_License,
+    Invalid_User_Input,
+    Payment_Failed,
+)
+from .utils import CustomUtilities
 import string
 import qrcode
 from io import BytesIO
@@ -65,6 +72,7 @@ def user_registration(request):
 # view for battery deposit payment based on the deposit count
 def user_deposit_payment(request):
     deposit_for_new_user = False
+    payment_success = False
 
     deposit_amount = request.POST.get("deposit_amount", "")
     card_number = request.POST.get("card_number", "")
@@ -72,19 +80,26 @@ def user_deposit_payment(request):
     cvv = request.POST.get("cvv", "")
     expiry = request.POST.get("expiry", "")
 
-    if "battery_num" in request.COOKIES:
-        deposit_for_new_user = True
-        u = Users(
-            email_id=request.COOKIES["email"],
-            name=request.COOKIES["name"],
-            battery_deposit_count=int(request.COOKIES["battery_num"]),
-            driving_license=request.COOKIES["license"],
-            phone_no=request.COOKIES["phone"],
-            pin=int(request.COOKIES["pin"]),
-        )
-        u.save()
+    payment_success = CustomUtilities.paymentsuccess(
+        card_number=card_number, name_on_card=name_on_card, cvv=cvv, expiry=expiry
+    )
 
-    response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
+    if payment_success:
+        if "battery_num" in request.COOKIES:
+            deposit_for_new_user = True
+            u = Users(
+                email_id=request.COOKIES["email"],
+                name=request.COOKIES["name"],
+                battery_deposit_count=int(request.COOKIES["battery_num"]),
+                driving_license=request.COOKIES["license"],
+                phone_no=request.COOKIES["phone"],
+                pin=int(request.COOKIES["pin"]),
+            )
+            u.save()
+
+        response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
+    else:
+        raise Payment_Failed
 
     if deposit_for_new_user:
         response.delete_cookie("email")
