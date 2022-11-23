@@ -128,3 +128,13 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Application specific settings
+
+BATTERY_STATUS_CHARGED_THRESHOLD_VALUE = os.getenv("BATTERY_STATUS_CHARGED_THRESHOLD_VALUE", 80)
+BATTERY_STATUS_DISCHARGED_THRESHOLD_VALUE = os.getenv(
+    "BATTERY_STATUS_DISCHARGED_THRESHOLD_VALUE", 30
+)
+BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS = os.getenv(
+    "BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS", 5
+)

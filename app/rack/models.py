@@ -1,4 +1,10 @@
+import time
+from typing import Iterator
+from threading import Thread
+
+from django.conf import settings
 from .exceptions import BatteryNotPresent, BatteryAlreadyPresent
+
 
 # Create your models here.
 class Rack:
@@ -11,6 +17,8 @@ class Rack:
 
     def __init__(self) -> None:
         self.shelves = [[{"level": 100, "locked": True, "present": True}] * 5] * 5
+        self.recharge_thread = Thread(target=self.recharge)
+        self.recharge_thread.start()
 
     def unlock_shelf(self, row: int, column: int) -> None:
         if self.shelves[row][column]["present"]:
@@ -29,6 +37,7 @@ class Rack:
             for shelf in row:
                 if shelf["present"] and shelf["level"] < 100:
                     shelf["level"] += 1
+        time.sleep(settings.BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS)
 
     def eject(self, row: int, column: int):
         if self.shelves[row][column]["present"]:
@@ -44,14 +53,31 @@ class Rack:
             self.shelves[row][column]["level"] = battery_level
             self.shelves[row][column]["present"] = True
 
+    def request_withdrawal_of_batteries(self, no_of_batteries: int) -> Iterator[list[int]]:
+        """
+        When user initiates a requst to withdraw batteries, kiossk needs to ask positions of the shelves
+        from which the batteries are supposed to withdrawn. This method will return those positions,
+        based on the no of batteries requested.
+
+        eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
+        """
+        for row in self.shelves:
+            for shelf in row:
+                if (
+                    shelf["present"]
+                    and shelf["level"] >= settings.BATTERY_STATUS_CHARGED_THRESHOLD_VALUE
+                ):
+                    yield [row, shelf]
+                    no_of_batteries -= 1
+
     def rack_stats(self):
-        # avlbl, undercharged, empty slots
+        # avlbl, undercharged, empty shelves
         charged_batteries, undercharged_batteries, empty_shelves = 0, 0, 0
 
         for row in self.shelves:
             for shelf in row:
                 if shelf["present"]:
-                    if shelf["level"] <= 30:
+                    if shelf["level"] <= settings.BATTERY_STATUS_DISCHARGED_THRESHOLD_VALUE:
                         undercharged_batteries += 1
                     else:
                         charged_batteries += 1
