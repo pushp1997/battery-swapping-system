@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from kiosk.models import Users
 from django.template import RequestContext
+import qrcode
+from io import BytesIO
 import cv2
 import base64
 import uuid
@@ -58,16 +60,8 @@ def user_registration(request):
         driving_license = request.POST.get("license", "")
         phone_no = request.POST.get("phone", "")
         pin = request.POST.get("pin", "")
-        # u = Users(user_id, name, email, license, "N", battery_deposit_count, phone, password, 0)
-        # u.save()
-        print("Redirecting to deposit payment")
+
         response = redirect("/kiosk/user/register/deposit-payment/form/")
-        # response = render(
-        #     request,
-        #     "kiosk/user-deposit-payment.html",
-        #     {"amount": battery_deposit_count * 300},
-        #     RequestContext(request),
-        # )
         response.set_cookie("email", email_id)
         response.set_cookie("name", name)
         response.set_cookie("battery_num", battery_deposit_count)
@@ -84,59 +78,60 @@ def user_registration(request):
 
 # view for battery deposit payment based on the deposit count
 def user_deposit_payment(request):
+    deposit_for_new_user = False
+
     deposit_amount = request.POST.get("deposit_amount", "")
     card_number = request.POST.get("card_number", "")
     name_on_card = request.POST.get("name_on_card", "")
     cvv = request.POST.get("cvv", "")
     expiry = request.POST.get("expiry", "")
 
-    # u = Users(
-    #     email_id=request.COOKIES["email"],
-    #     name=request.COOKIES["name"],
-    #     battery_deposit_count=int(request.COOKIES["battery_num"]),
-    #     driving_license=request.COOKIES["license"],
-    #     phone_no=request.COOKIES["phone"],
-    #     pin=int(request.COOKIES["pin"]),
-    # )
-    # u.save()
+    if "battery_num" in request.COOKIES:
+        deposit_for_new_user = True
+        u = Users(
+            email_id=request.COOKIES["email"],
+            name=request.COOKIES["name"],
+            battery_deposit_count=int(request.COOKIES["battery_num"]),
+            driving_license=request.COOKIES["license"],
+            phone_no=request.COOKIES["phone"],
+            pin=int(request.COOKIES["pin"]),
+        )
+        u.save()
 
-    # u = Users()
-    # u.battery_num = int(request.COOKIES["battery_num"])
-    # u.email = request.COOKIES["email"]
-    # u.name = request.COOKIES["name"]
-    # u.license = request.COOKIES["license"]
-    # u.phone = request.COOKIES["phone"]
-    # u.pin = int(request.COOKIES["pin"])
-    # # u = Users(name, email, license, "N", battery_num, phone, pin, 0)
-    # u.save()
+    response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
 
-    return redirect("/kiosk/user/register/success/")
+    if deposit_for_new_user:
+        response.delete_cookie("email")
+        response.delete_cookie("name")
+        response.delete_cookie("battery_num")
+        response.delete_cookie("license")
+        response.delete_cookie("phone")
+        response.delete_cookie("pin")
+
+    return response
 
 
 def user_deposit_payment_form(request):
     form = UserForm()
     if "battery_num" in request.COOKIES:
-        print("IN DEPOSIT: ", request.COOKIES)
+        print("IN DEPOSIT FORM: ", request.COOKIES)
         battery_num = int(request.COOKIES["battery_num"])
         response = render(
             request,
             "kiosk/user-deposit-payment.html",
             {"amount": battery_num * 300},
         )
-        response.set_cookie("email", request.COOKIES["email"])
-        response.set_cookie("name", request.COOKIES["name"])
-        response.set_cookie("battery_num", request.COOKIES["battery_num"])
-        response.set_cookie("license", request.COOKIES["license"])
-        response.set_cookie("phone", request.COOKIES["phone"])
-        response.set_cookie("pin", request.COOKIES["pin"])
         return response
 
     return render(request, "kiosk/user-deposit-payment.html", {"form": form})
 
 
-def user_registration_success(request):
-    context = {}
-    return render(request, "kiosk/user-registration-success.html", context)
+def user_registration_success(request, user_id):
+    qr_img = qrcode.make(user_id)
+    buffer = BytesIO()
+    qr_img.save(buffer, "PNG")
+    img_str = base64.b64encode(buffer.getvalue())
+    return render(request, "kiosk/user-registration-success.html", {"qr_img": img_str.decode()})
 
 
 def qr_scan_success(request, user_id):
@@ -158,7 +153,7 @@ def wrf_insufficient_deposit(request):
 
 def user_dashboard(request):
     user = Users.objects.all()
-    return render(request, "kiosk/user-dashboard.html", {'user': user})
+    return render(request, "kiosk/user-dashboard.html", {"user": user})
 
 
 def battery_success(request):

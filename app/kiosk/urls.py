@@ -14,7 +14,9 @@ urlpatterns = [
     ),
     path("user/register/deposit-payment/", views.user_deposit_payment, name="user_deposit_payment"),
     path(
-        "user/register/success/", views.user_registration_success, name="user_registration_success"
+        "user/register/success/<str:user_id>/",
+        views.user_registration_success,
+        name="user_registration_success",
     ),
     path("user/login/auth/<str:user_id>/", views.qr_scan_success, name="user_login_auth"),
     path(
