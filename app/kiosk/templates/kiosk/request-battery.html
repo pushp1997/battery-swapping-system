@@ -9,7 +9,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
+    <form action="{%url 'withdrawal_success'%}" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="batteries allowed" class="form-label" style="margin-left: -70px;">Batteries allowed to withdraw: </label>

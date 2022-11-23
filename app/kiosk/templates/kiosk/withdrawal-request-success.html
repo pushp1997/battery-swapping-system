@@ -9,7 +9,6 @@
 </div>
 <br />
 <div class="container">
-    <form action="/action_page.php" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
             <label for="available batteries" class="form-label" style="margin-left: -70px;">Battery Dispense Successful! </label>
@@ -21,8 +20,7 @@
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">
-            <button type="submit" class="btn btn-primary" value="submit battery">Submit Battery</button>
+            <a type="Submit Battery" class="btn btn-primary" href="{%url 'submit_battery'%}" value="Submit Battery">Submit Battery</a>
         </div>
-    </form>
 </div>
 {% endblock body %}
