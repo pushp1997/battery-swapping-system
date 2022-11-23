@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from kiosk.models import Users
 from django.forms import Form
 import string
-from .forms import UserForm
 import qrcode
 from io import BytesIO
 import cv2
