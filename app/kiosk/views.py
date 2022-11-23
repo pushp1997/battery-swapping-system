@@ -95,7 +95,6 @@ def user_deposit_payment(request):
 
 
 def user_deposit_payment_form(request):
-    form = UserForm()
     if "battery_num" in request.COOKIES:
         print("IN DEPOSIT FORM: ", request.COOKIES)
         battery_num = int(request.COOKIES["battery_num"])
@@ -106,7 +105,7 @@ def user_deposit_payment_form(request):
         )
         return response
 
-    return render(request, "kiosk/user-deposit-payment.html", {"form": form})
+    return render(request, "kiosk/user-deposit-payment.html", {})
 
 
 def user_registration_success(request, user_id):
@@ -154,10 +153,7 @@ def submit_battery(request):
         return redirect("/kiosk/user/battery/submission/success/")
 
     # if a GET (or any other method) we'll create a blank form
-    else:
-        form = UserForm()
-
-    return render(request, "kiosk/submit_battery.html", {"form": form})
+    return render(request, "kiosk/submit_battery.html", {})
 
 
 def recharge_payment(request):
@@ -171,10 +167,7 @@ def recharge_payment(request):
         return redirect("/kiosk/user/dashboard/")
 
     # if a GET (or any other method) we'll create a blank form
-    else:
-        form = UserForm()
-
-    return render(request, "kiosk/user-recharge-payment.html", {"form": form})
+    return render(request, "kiosk/user-recharge-payment.html", {})
 
 
 def withdraw_success(request):
