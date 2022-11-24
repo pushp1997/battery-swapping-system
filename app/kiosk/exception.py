@@ -5,7 +5,7 @@ class Invalid_User_Input(Exception):
 
 class User_Already_Exists_Email(Exception):
     def __str__(self) -> str:
-        return "User email id is not unique."
+        return "Either User email id or License Number is not unique."
 
 
 class User_Already_Exists_License(Exception):

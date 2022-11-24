@@ -100,7 +100,6 @@ def user_deposit_payment(request):
                 u.save()
             except Exception:
                 e = sys.exc_info()[0]
-                print("I am the exception", e)
                 raise User_Already_Exists_Email
         response = redirect(f"/kiosk/user/register/success/{u.user_id}/")
     else:
