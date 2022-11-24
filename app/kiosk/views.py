@@ -92,7 +92,7 @@ def user_deposit_payment(request):
                 u = Users(
                     email_id=request.COOKIES["email"],
                     name=request.COOKIES["name"],
-                    battery_deposit_count=int(request.COOKIES["battery_num"]),
+                    allowed_batteries=int(request.COOKIES["battery_num"]),
                     driving_license=request.COOKIES["license"],
                     phone_no=request.COOKIES["phone"],
                     pin=int(request.COOKIES["pin"]),
@@ -172,7 +172,11 @@ def user_dashboard(request):
     return render(
         request,
         "kiosk/user-dashboard.html",
-        {"charged_batteries": charged_batteries, "available_balance": available_balance, "allowed_batteries": allowed_batteries},
+        {
+            "charged_batteries": charged_batteries,
+            "available_balance": available_balance,
+            "allowed_batteries": allowed_batteries,
+        },
     )
 
 
@@ -194,22 +198,24 @@ def request_battery(request):
         charged_batteries = rack_stats_dict.get("charged_batteries")
 
         # insufficient deposit
-        if req_user_data.allowed_batteries < batteries_withdrawal :
+        if req_user_data.allowed_batteries < batteries_withdrawal:
             return render(request, "kiosk/wrf-insufficient-deposit.html", {})
         # insufficience user account balance
-        elif req_user_data.user_recharge < batteries_withdrawal * 300 :
+        elif req_user_data.user_recharge < batteries_withdrawal * 300:
             return render(request, "kiosk/wrf-insufficient-balance.html", {})
         # insufficient available batteries in rack
-        elif charged_batteries < batteries_withdrawal :
+        elif charged_batteries < batteries_withdrawal:
             return render(request, "kiosk/wrf-insufficient-batteries.html", {})
         # withdrawal success
         else:
             req_user_data.allowed_batteries = allowed_batteries - batteries_withdrawal
             req_user_data.save()
             return render(request, "kiosk/withdrawal-request-success.html", {})
-           
+
     else:
-        return render(request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries})
+        return render(
+            request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries}
+        )
 
 
 def submit_battery(request):
@@ -219,7 +225,7 @@ def submit_battery(request):
         userid = request.COOKIES["user_id"]
         newuserid = userid.replace("-", "")
         req_user_data = user.get(user_id=newuserid)
-        allowed_batteries = req_user_data.allowed_batteries #nam change krna padega
+        allowed_batteries = req_user_data.allowed_batteries  # nam change krna padega
         allowed_batteries += int(batteries_submitted)
         req_user_data.allowed_batteries = allowed_batteries
         req_user_data.save()
