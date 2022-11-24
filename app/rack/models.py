@@ -43,16 +43,22 @@ class Rack:
         """
         When asked to eject batteries from the rack, positions for all the batteries are needed to be
         provided and hence there present flag will be set to Flase and locked status to be 'unlocked'.
+        It returns the battery levels of the batteries ejected w.r.t the position sequence.
 
-        Eg: input = [[2, 3], [4, 5]]
+        Eg: input = [[2, 3], [4, 5]]; output = [100, 95]
         """
+        battery_levels = []
         for battery_position in battery_positions:
             if self.shelves[battery_position[0]][battery_position[1]]["present"]:
+                battery_levels.append(
+                    self.shelves[battery_position[0]][battery_position[1]]["level"]
+                )
                 self.shelves[battery_position[0]][battery_position[1]]["level"] = 0
                 self.shelves[battery_position[0]][battery_position[1]]["present"] = False
                 self.unlock_shelf(battery_position[0], battery_position[1])
             else:
                 raise BatteryNotPresent
+        return battery_levels
 
     def submit(self, battery_positions: list[list[int]]):
         """
@@ -60,7 +66,7 @@ class Rack:
         provided along with the battery percentage in them and hence there present flag will be set to True
         and locked status to be 'locked'.
 
-        Eg: input = [[2, 3], [4, 5]]
+        Eg: input = [[2, 3, 15], [4, 5, 8]]
         """
         for battery_position in battery_positions:
             if self.shelves[battery_position[0]][battery_position[1]]["present"]:
