@@ -21,7 +21,7 @@ class TestUsers(TestCase):
             name="Test User2",
             email_id="user2@test.com",
             phone_no="+353894890221",
-            driving_license="DRIVINGLICENSE1",
+            driving_license="DRIVINGLICENSE2",
             allowed_batteries=3,
             user_recharge=1000,
             admin_flag=False,
