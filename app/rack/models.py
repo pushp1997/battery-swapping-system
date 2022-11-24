@@ -39,12 +39,18 @@ class Rack:
                     shelf["level"] += 1
         time.sleep(settings.BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS)
 
-    def eject(self, row: int, column: int):
-        if self.shelves[row][column]["present"]:
-            self.shelves[row][column]["level"] = 0
-            self.shelves[row][column]["present"] = False
-        else:
-            raise BatteryNotPresent
+    def eject(self, battery_positions: Iterator[list[int]]):
+        """
+        When asked to eject batteries from the rack, positions for all the batteries are needed to be
+        provided and hence there present flag will be set to Flase and locked status to be 'unlocked'.
+
+        Eg: input = [[2, 3], [4, 5]]
+        """
+        # if self.shelves[row][column]["present"]:
+        #     self.shelves[row][column]["level"] = 0
+        #     self.shelves[row][column]["present"] = False
+        # else:
+        #     raise BatteryNotPresent
 
     def submit(self, row: int, column: int, battery_level: int):
         if self.shelves[row][column]["present"]:
@@ -53,7 +59,7 @@ class Rack:
             self.shelves[row][column]["level"] = battery_level
             self.shelves[row][column]["present"] = True
 
-    def request_withdrawal_of_batteries(self, no_of_batteries: int) -> Iterator[list[int]]:
+    def request_withdrawal_of_batteries(self, no_of_batteries: int) -> list[list[int]]:
         """
         When user initiates a requst to withdraw batteries, kiossk needs to ask positions of the shelves
         from which the batteries are supposed to withdrawn. This method will return those positions,
@@ -61,14 +67,19 @@ class Rack:
 
         eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
         """
-        for row in self.shelves:
-            for shelf in row:
+        avlbl_positions = []
+        for i, row in enumerate(self.shelves):
+            for j, shelf in enumerate(row):
                 if (
                     shelf["present"]
                     and shelf["level"] >= settings.BATTERY_STATUS_CHARGED_THRESHOLD_VALUE
                 ):
-                    yield [row, shelf]
+                    avlbl_positions.append([i, j])
+                    print(no_of_batteries)
                     no_of_batteries -= 1
+                    if no_of_batteries == 0:
+                        return avlbl_positions
+        return avlbl_positions
 
     def rack_stats(self):
         # avlbl, undercharged, empty shelves
