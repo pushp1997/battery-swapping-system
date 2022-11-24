@@ -39,25 +39,38 @@ class Rack:
                     shelf["level"] += 1
         time.sleep(settings.BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS)
 
-    def eject(self, battery_positions: Iterator[list[int]]):
+    def eject(self, battery_positions: list[list[int]]):
         """
         When asked to eject batteries from the rack, positions for all the batteries are needed to be
         provided and hence there present flag will be set to Flase and locked status to be 'unlocked'.
 
         Eg: input = [[2, 3], [4, 5]]
         """
-        # if self.shelves[row][column]["present"]:
-        #     self.shelves[row][column]["level"] = 0
-        #     self.shelves[row][column]["present"] = False
-        # else:
-        #     raise BatteryNotPresent
+        for battery_position in battery_positions:
+            if self.shelves[battery_position[0]][battery_position[1]]["present"]:
+                self.shelves[battery_position[0]][battery_position[1]]["level"] = 0
+                self.shelves[battery_position[0]][battery_position[1]]["present"] = False
+                self.unlock_shelf(battery_position[0], battery_position[1])
+            else:
+                raise BatteryNotPresent
 
-    def submit(self, row: int, column: int, battery_level: int):
-        if self.shelves[row][column]["present"]:
-            raise BatteryAlreadyPresent
-        else:
-            self.shelves[row][column]["level"] = battery_level
-            self.shelves[row][column]["present"] = True
+    def submit(self, battery_positions: list[list[int]]):
+        """
+        When asked to submit batteries to the rack, positions for all the batteries are needed to be
+        provided along with the battery percentage in them and hence there present flag will be set to True
+        and locked status to be 'locked'.
+
+        Eg: input = [[2, 3], [4, 5]]
+        """
+        for battery_position in battery_positions:
+            if self.shelves[battery_position[0]][battery_position[1]]["present"]:
+                raise BatteryAlreadyPresent
+            else:
+                self.shelves[battery_position[0]][battery_position[1]]["level"] = battery_position[
+                    2
+                ]
+                self.shelves[battery_position[0]][battery_position[1]]["present"] = True
+                self.lock_shelf(battery_position[0], battery_position[1])
 
     def request_withdrawal_of_batteries(self, no_of_batteries: int) -> list[list[int]]:
         """
