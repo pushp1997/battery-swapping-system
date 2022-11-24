@@ -208,10 +208,18 @@ def request_battery(request):
             return render(request, "kiosk/wrf-insufficient-batteries.html", {})
         # withdrawal success
         else:
+            # for i in Rack().request_withdrawal_of_batteries(batteries_withdrawal):
+            #     print(i)
+            # gen = Rack().request_withdrawal_of_batteries(batteries_withdrawal)
+
             req_user_data.allowed_batteries = allowed_batteries - batteries_withdrawal
+            available_balance = req_user_data.user_recharge
+            req_user_data.user_recharge = available_balance - (batteries_withdrawal*300)
             req_user_data.save()
+            # return render(request, "kiosk/withdrawal-request-success.html", {"coordinates":next(gen)})
             return render(request, "kiosk/withdrawal-request-success.html", {})
 
+           
     else:
         return render(
             request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries}
