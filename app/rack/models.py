@@ -3,7 +3,12 @@ from typing import Iterator
 from threading import Thread
 
 from django.conf import settings
-from .exceptions import BatteryNotPresent, BatteryAlreadyPresent
+from .exceptions import (
+    BatteryNotPresent,
+    BatteryAlreadyPresent,
+    NotEnoughEmptySlots,
+    NotEnoughChargedBatteries,
+)
 
 
 # Create your models here.
@@ -80,7 +85,7 @@ class Rack:
 
     def request_withdrawal_of_batteries(self, no_of_batteries: int) -> list[list[int]]:
         """
-        When user initiates a requst to withdraw batteries, kiossk needs to ask positions of the shelves
+        When user initiates a requst to withdraw batteries, kiosk needs to ask positions of the shelves
         from which the batteries are supposed to withdrawn. This method will return those positions,
         based on the no of batteries requested.
 
@@ -94,11 +99,32 @@ class Rack:
                     and shelf["level"] >= settings.BATTERY_STATUS_CHARGED_THRESHOLD_VALUE
                 ):
                     avlbl_positions.append([i, j])
-                    print(no_of_batteries)
                     no_of_batteries -= 1
                     if no_of_batteries == 0:
                         return avlbl_positions
+        if no_of_batteries > 0:
+            raise NotEnoughChargedBatteries
         return avlbl_positions
+
+    def request_submission_of_batteries(self, no_of_batteries: int) -> list[list[int]]:
+        """
+        When user initiates a requst to submit batteries, kiosk needs to provide positions of the shelves
+        to which the batteries are supposed to submitted by the user. This method will return those positions,
+        based on the no of batteries requested.
+
+        eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
+        """
+        empty_positions = []
+        for i, row in enumerate(self.shelves):
+            for j, shelf in enumerate(row):
+                if not shelf["present"]:
+                    empty_positions.append([i, j])
+                    no_of_batteries -= 1
+                    if no_of_batteries == 0:
+                        return empty_positions
+        if no_of_batteries > 0:
+            raise NotEnoughEmptySlots
+        return empty_positions
 
     def rack_stats(self):
         # avlbl, undercharged, empty shelves
