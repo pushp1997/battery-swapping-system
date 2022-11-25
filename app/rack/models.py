@@ -47,6 +47,7 @@ class Rack:
                 if shelf["present"] and shelf["level"] < 100:
                     shelf["level"] += 1
         time.sleep(settings.BATTERY_PER_PERCENTAGE_RECHARGE_TIME_IN_SECS)
+        self.recharge()
 
     def eject(self, battery_positions: list[list[int]]):
         """
