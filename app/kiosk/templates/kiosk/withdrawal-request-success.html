@@ -10,13 +10,28 @@
 <br />
 <div class="container">
         {% csrf_token %}
-        <div class="mb-3 mt-3 " >
-            <label for="available batteries" class="form-label" style="margin-left: -70px;">Battery Dispense Successful! </label>
+        <div class="mb-3 mt-3 text-center" >
+            <label for="available batteries" class="form-label" style="margin-left: -650px;">Battery Dispense Successful! </label>
         </div>
         <br>
         <div class="mb-3 mt-3 text-center">
-            <label for="battery dispense statistics" class="form-label">battery Dispense Statistics: </label>
-            <label for="battery dispense statistics" class="form-label"> </label>
+            <label for="battery dispense statistics" class="form-label">Battery Dispense Statistics: </label>
+        </div>
+        <div style="text-align: center;">
+            <ul style="display: inline-block; text-align: left;">
+                {% for x in battery_stats %}
+                <li>Battery {{ forloop.counter }}: {{ x }}%</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        <div class="mb-3 mt-3 text-center">
+            <label for="charged cut" class="form-label">Amount charged for the above percentages of batteries: </label>
+            <label for="charged cut" class="form-label">{{charged_amount}} </label>
+        </div>
+        <div class="mb-3 mt-3 text-center">
+            <label for="availablebalance" class="form-label">Available balance: </label>
+            <label for="availablebalance" class="form-label">{{available_balance}} </label>
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">

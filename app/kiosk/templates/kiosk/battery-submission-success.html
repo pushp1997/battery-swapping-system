@@ -12,7 +12,27 @@
     <form action="{%url 'user_dashboard'%}" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3 " >
-            <label for="battery submit success" class="form-label" style="margin-left: -70px;">Battery Submission Successful! </label>
+            <label for="battery submit success" class="form-label" style="margin-left: -650px;">Battery Submission Successful! </label>
+        </div>
+        <br>
+        <div class="mb-3 mt-3 text-center">
+            <label for="battery submission statistics" class="form-label">Battery Submitted Statistics: </label>
+        </div>
+        <div style="text-align: center;">
+            <ul style="display: inline-block; text-align: left;">
+                {% for x in battery_stats %}
+                <li>Battery {{ forloop.counter }}: {{ x }}%</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        <div class="mb-3 mt-3 text-center">
+            <label for="amount returned" class="form-label">Amount returned for the above percentages of batteries to your wallet: </label>
+            <label for="amount returned" class="form-label">{{amount_returned}} </label>
+        </div>
+        <div class="mb-3 mt-3 text-center">
+            <label for="availablebalance" class="form-label">Available balance: </label>
+            <label for="availablebalance" class="form-label">{{available_balance}} </label>
         </div>
         <br>
         <div class="d-flex justify-content-center flex-nowrap">

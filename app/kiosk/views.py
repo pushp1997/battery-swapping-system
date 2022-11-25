@@ -191,34 +191,37 @@ def request_battery(request):
     allowed_batteries = req_user_data.allowed_batteries
 
     if request.method == "POST":
-        batteries_withdrawal = int(request.POST.get("batteries_withdrawal", ""))
+        batteries_withdraw = int(request.POST.get("batteries_withdrawal", ""))
         batteries_submit = request.POST.get("batteries_submit", "")
         rack_stats_dict = Rack().rack_stats()
         charged_batteries = rack_stats_dict.get("charged_batteries")
 
+        # insufficient available batteries in rack
+        if charged_batteries < batteries_withdraw:
+            return render(request, "kiosk/wrf-insufficient-batteries.html", {})
         # insufficient deposit
-        if req_user_data.allowed_batteries < batteries_withdrawal:
+        elif req_user_data.allowed_batteries < batteries_withdraw:
             return render(request, "kiosk/wrf-insufficient-deposit.html", {})
         # insufficience user account balance
-        elif req_user_data.user_recharge < batteries_withdrawal * 300:
+        elif req_user_data.user_recharge < batteries_withdraw * 300:
             return render(request, "kiosk/wrf-insufficient-balance.html", {})
-        # insufficient available batteries in rack
-        elif charged_batteries < batteries_withdrawal:
-            return render(request, "kiosk/wrf-insufficient-batteries.html", {})
-        # withdrawal success
+        # withdrawal success 
         else:
-            # for i in Rack().request_withdrawal_of_batteries(batteries_withdrawal):
-            #     print(i)
-            # gen = Rack().request_withdrawal_of_batteries(batteries_withdrawal)
-
-            req_user_data.allowed_batteries = allowed_batteries - batteries_withdrawal
-            available_balance = req_user_data.user_recharge
-            req_user_data.user_recharge = available_balance - (batteries_withdrawal*300)
+            # request_withdrawal_of_batteries() returns percentage of batteries ejected
+            battery_levels_withdrew = Rack().request_withdrawal_of_batteries(batteries_withdraw)
+            # updated number of allowed batteries to withdraw
+            req_user_data.allowed_batteries = allowed_batteries - batteries_withdraw
+            # calculating charged amount 
+            total_percentage_withdrew = sum(battery_levels_withdrew)
+            charged_amount = total_percentage_withdrew * 3 # 1% battery costs 3 euros
+            # updated user account balance
+            current_available_balance = req_user_data.user_recharge - charged_amount
+            req_user_data.user_recharge = current_available_balance
+            # saving the changes in the user object
             req_user_data.save()
-            # return render(request, "kiosk/withdrawal-request-success.html", {"coordinates":next(gen)})
-            return render(request, "kiosk/withdrawal-request-success.html", {})
-
-           
+            
+            return render(request, "kiosk/withdrawal-request-success.html", {"battery_stats": battery_levels_withdrew, "charged_amount": charged_amount, "available_balance": current_available_balance})
+       
     else:
         return render(
             request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries}
@@ -227,16 +230,28 @@ def request_battery(request):
 
 def submit_battery(request):
     if request.method == "POST":
-        batteries_submitted = request.POST.get("batteries_submission", "")
+        batteries_submitted = int(request.POST.get("batteries_submission", ""))
         user = Users.objects.all()
         userid = request.COOKIES["user_id"]
         newuserid = userid.replace("-", "")
         req_user_data = user.get(user_id=newuserid)
-        allowed_batteries = req_user_data.allowed_batteries  # nam change krna padega
-        allowed_batteries += int(batteries_submitted)
+
+        # request_submission_of_batteries() returns percentage of submitted batteries 
+        battery_levels_submitted = Rack().request_submission_of_batteries(batteries_submitted)
+        # calculating amount to be returned to the user balance wallet
+        total_percentage_submitted = sum(battery_levels_submitted)
+        amount_tobe_returned = total_percentage_submitted * 3 # 1% battery costs 3 euros
+        # updated user account balance
+        # current_available_balance = req_user_data.user_recharge
+        req_user_data.user_recharge = req_user_data.user_recharge + amount_tobe_returned
+        current_available_balance = req_user_data.user_recharge
+        # updating the number of allowed of batteries to withdraw 
+        allowed_batteries = req_user_data.allowed_batteries 
+        allowed_batteries += batteries_submitted
         req_user_data.allowed_batteries = allowed_batteries
+        # saving the changes in the user object
         req_user_data.save()
-        return redirect("/kiosk/user/battery/submission/success/")
+        return render(request, "kiosk/battery-submission-success.html", {"battery_stats":battery_levels_submitted, "amount_returned":amount_tobe_returned, "available_balance":current_available_balance})
 
     # if a GET (or any other method) we'll create a blank form
     return render(request, "kiosk/submit_battery.html", {})
