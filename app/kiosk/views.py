@@ -192,7 +192,6 @@ def request_battery(request):
 
     if request.method == "POST":
         batteries_withdraw = int(request.POST.get("batteries_withdrawal", ""))
-        batteries_submit = request.POST.get("batteries_submit", "")
         rack_stats_dict = Rack().rack_stats()
         charged_batteries = rack_stats_dict.get("charged_batteries")
 
@@ -235,6 +234,11 @@ def submit_battery(request):
         userid = request.COOKIES["user_id"]
         newuserid = userid.replace("-", "")
         req_user_data = user.get(user_id=newuserid)
+
+        rack_stats_dict = Rack().rack_stats()
+        empty_shelves = rack_stats_dict.get("empty_shelves")
+        if batteries_submitted > empty_shelves:
+            return render(request, "kiosk/battery-submission-fail.html", {})
 
         # request_submission_of_batteries() returns percentage of submitted batteries 
         battery_levels_submitted = Rack().request_submission_of_batteries(batteries_submitted)
@@ -281,3 +285,7 @@ def recharge_payment(request):
 
 def withdraw_success(request):
     return render(request, "kiosk/withdrawal-request-success.html", {})
+
+def battery_submission_fail(request):
+    return render(request, "kiosk/battery-submission-fail.html", {})
+

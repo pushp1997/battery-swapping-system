@@ -64,4 +64,10 @@ urlpatterns = [
         views.withdraw_success,
         name="withdrawal_success",
     ),
+    path(
+        "user/battery/submission/failure/notenoughemptyslots",
+        views.battery_submission_fail,
+        name="battery_submission_fail"
+
+    )
 ]
