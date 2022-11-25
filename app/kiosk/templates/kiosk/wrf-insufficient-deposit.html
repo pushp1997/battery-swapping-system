@@ -6,22 +6,25 @@
 </div>
 <br />
 <div class="container">
-    {% csrf_token %}
-    <div class="mb-3 mt-3 justify-content-center">
-        <label for="insufficient deposit" class="form-label">Insufficient Deposit! 
-            <br> Please click below to pay deposit or else Submit Battery to withdraw More Batteries.
-        </label>
-    </div>
-    <div class="d-flex justify-content-center flex-nowrap">
-        <a type="pay_deposit" class="btn btn-primary" href="{%url 'user_deposit_payment_form'%}" value="pay_deposit">Pay Deposit</a>
-    </div>
-    <br>
-    <div class="d-flex justify-content-center flex-nowrap">
-        <a type="submit_battery" class="btn btn-primary" href="{%url 'submit_battery'%}" value="submit_battery">Submit Battery</a>
-    </div>
-    <br>
-    <div class="d-flex justify-content-center flex-nowrap">
-        <a type="back" class="btn btn-primary" href="{%url 'request_battery'%}" value="goback">Go Back</a>
-    </div>
+    <form action="{%url 'user_deposit_payment_form'%}" method="post">
+        {% csrf_token %}
+        <div class="mb-3 mt-3 justify-content-center">
+            <label for="insufficient deposit" class="form-label">Insufficient Deposit! 
+                <br> Please click below to pay deposit or else Submit Battery to withdraw More Batteries.
+            </label>
+        </div>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <button type="pay_deposit" class="btn btn-primary"  value="pay_deposit">Pay Deposit for {{deposit_count}} battery(ies)</button>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <a type="submit_battery" class="btn btn-primary" href="{%url 'submit_battery'%}" value="submit_battery">Submit Battery</a>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <a type="back" class="btn btn-primary" href="{%url 'request_battery'%}" value="goback">Go Back</a>
+        </div>
+    </form>
+    
 </div>
 {% endblock body %}

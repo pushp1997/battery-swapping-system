@@ -200,7 +200,9 @@ def request_battery(request):
             return render(request, "kiosk/wrf-insufficient-batteries.html", {})
         # insufficient deposit
         elif req_user_data.allowed_batteries < batteries_withdraw:
-            return render(request, "kiosk/wrf-insufficient-deposit.html", {})
+            response = render(request, "kiosk/wrf-insufficient-deposit.html", {"deposit_count":batteries_withdraw-allowed_batteries})
+            response.set_cookie("battery_num", batteries_withdraw-allowed_batteries)
+            return response
         # insufficience user account balance
         elif req_user_data.user_recharge < batteries_withdraw * 300:
             return render(request, "kiosk/wrf-insufficient-balance.html", {})
@@ -219,11 +221,21 @@ def request_battery(request):
             # saving the changes in the user object
             req_user_data.save()
             
-            return render(request, "kiosk/withdrawal-request-success.html", {"battery_stats": battery_levels_withdrew, "charged_amount": charged_amount, "available_balance": current_available_balance})
+            return render(
+                request, 
+                "kiosk/withdrawal-request-success.html", 
+                {
+                    "battery_stats": battery_levels_withdrew, 
+                    "charged_amount": charged_amount, 
+                    "available_balance": current_available_balance
+                }
+            )
        
     else:
         return render(
-            request, "kiosk/request-battery.html", {"allowed_batteries": allowed_batteries}
+            request, 
+            "kiosk/request-battery.html", 
+            {"allowed_batteries": allowed_batteries}
         )
 
 
@@ -255,7 +267,15 @@ def submit_battery(request):
         req_user_data.allowed_batteries = allowed_batteries
         # saving the changes in the user object
         req_user_data.save()
-        return render(request, "kiosk/battery-submission-success.html", {"battery_stats":battery_levels_submitted, "amount_returned":amount_tobe_returned, "available_balance":current_available_balance})
+        return render(
+            request, 
+            "kiosk/battery-submission-success.html", 
+            {
+                "battery_stats":battery_levels_submitted, 
+                "amount_returned":amount_tobe_returned, 
+                "available_balance":current_available_balance
+            }
+        )
 
     # if a GET (or any other method) we'll create a blank form
     return render(request, "kiosk/submit_battery.html", {})
@@ -285,6 +305,7 @@ def recharge_payment(request):
 
 def withdraw_success(request):
     return render(request, "kiosk/withdrawal-request-success.html", {})
+
 
 def battery_submission_fail(request):
     return render(request, "kiosk/battery-submission-fail.html", {})
