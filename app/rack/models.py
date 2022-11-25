@@ -124,14 +124,17 @@ class Rack:
         eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
         """
         # Searching for all positions which are empty
+        battery_levels_deposited = []
         empty_positions = []
         found_all = False
         for i, row in enumerate(self.shelves):
             for j, shelf in enumerate(row):
                 if not shelf["present"]:
-                    empty_positions.append(
-                        [i, j, generate_random_battery_level_for_battery_inserted_by_user()]
+                    battery_level_deposited = (
+                        generate_random_battery_level_for_battery_inserted_by_user()
                     )
+                    battery_levels_deposited.append(battery_level_deposited)
+                    empty_positions.append([i, j, battery_level_deposited])
                     no_of_batteries -= 1
                     if no_of_batteries == 0:
                         found_all = True
@@ -143,6 +146,7 @@ class Rack:
 
         # Submitting batteries for the found positions
         self.submit(empty_positions)
+        return battery_levels_deposited
 
     def rack_stats(self) -> dict[str, int]:
         """
