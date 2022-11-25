@@ -7,14 +7,17 @@ def admin_login(request):
 
 
 def admin_dashboard(request):
-    rack = Rack()
-    stats = rack.rack_stats()
+    rack_stats_dict = Rack().rack_stats()
+    empty_shelves = rack_stats_dict.get("empty_shelves")
+    undercharged_batteries = rack_stats_dict.get("undercharged_batteries")
+    charged_batteries = rack_stats_dict.get("charged_batteries")
+
     return render(
         request,
         "admin/admin_dashboard.html",
         {
-            "charged_batteries": stats["charged_batteries"],
-            "undercharged_batteries": stats["undercharged_batteries"],
-            "empty_shelves": stats["empty_shelves"],
+            "charged_batteries": charged_batteries,
+            "undercharged_batteries": undercharged_batteries,
+            "empty_shelves": empty_shelves,
         },
     )
