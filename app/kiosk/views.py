@@ -220,13 +220,13 @@ def request_battery(request):
             return render(request, "kiosk/wrf-insufficient-balance.html", {})
         # withdrawal success 
         else:
-            # request_withdrawal_of_batteries() returns percentage of batteries ejected
-            battery_levels_withdrew = Rack().request_withdrawal_of_batteries(batteries_withdraw)
             # updated number of allowed batteries to withdraw
             req_user_data.allowed_batteries = allowed_batteries - batteries_withdraw
+            # request_withdrawal_of_batteries() returns percentage of batteries ejected
+            battery_levels_withdrawn = Rack().request_withdrawal_of_batteries(batteries_withdraw)
             # calculating charged amount 
-            total_percentage_withdrew = sum(battery_levels_withdrew)
-            charged_amount = total_percentage_withdrew * 3 # 1% battery costs 3 euros
+            total_percentage_withdrawn = sum(battery_levels_withdrawn)
+            charged_amount = total_percentage_withdrawn * 3 # 1% battery costs 3 euros
             # updated user account balance
             current_available_balance = req_user_data.user_recharge - charged_amount
             req_user_data.user_recharge = current_available_balance
@@ -237,7 +237,7 @@ def request_battery(request):
                 request, 
                 "kiosk/withdrawal-request-success.html", 
                 {
-                    "battery_stats": battery_levels_withdrew, 
+                    "battery_stats": battery_levels_withdrawn, 
                     "charged_amount": charged_amount, 
                     "available_balance": current_available_balance
                 }
@@ -270,7 +270,6 @@ def submit_battery(request):
         total_percentage_submitted = sum(battery_levels_submitted)
         amount_tobe_returned = total_percentage_submitted * 3 # 1% battery costs 3 euros
         # updated user account balance
-        # current_available_balance = req_user_data.user_recharge
         req_user_data.user_recharge = req_user_data.user_recharge + amount_tobe_returned
         current_available_balance = req_user_data.user_recharge
         # updating the number of allowed of batteries to withdraw 
