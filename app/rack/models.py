@@ -18,14 +18,16 @@ class Rack:
     def __new__(cls, *args):
         if cls.__instance is None:
             cls.__instance = object.__new__(cls, *args)
+            cls.__instance.shelves = [
+                [{"level": 100, "locked": True, "present": True} for _ in range(5)]
+                for _ in range(5)
+            ]
+            cls.__instance.recharge_thread = Thread(target=cls.__instance.recharge)
+            cls.__instance.recharge_thread.start()
         return cls.__instance
 
     def __init__(self) -> None:
-        self.shelves = [
-            [{"level": 100, "locked": True, "present": True} for _ in range(5)] for _ in range(5)
-        ]
-        self.recharge_thread = Thread(target=self.recharge)
-        self.recharge_thread.start()
+        pass
 
     def unlock_shelf(self, row: int, column: int) -> None:
         if self.shelves[row][column]["present"]:
