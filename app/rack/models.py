@@ -1,5 +1,4 @@
 import time
-from typing import Iterator
 from threading import Thread
 
 from django.conf import settings
@@ -9,6 +8,7 @@ from .exceptions import (
     NotEnoughEmptySlots,
     NotEnoughChargedBatteries,
 )
+from .utils import generate_random_battery_level_for_battery_inserted_by_user
 
 
 # Create your models here.
@@ -21,7 +21,9 @@ class Rack:
         return cls.__instance
 
     def __init__(self) -> None:
-        self.shelves = [[{"level": 100, "locked": True, "present": True}] * 5] * 5
+        self.shelves = [
+            [{"level": 100, "locked": True, "present": True} for _ in range(5)] for _ in range(5)
+        ]
         self.recharge_thread = Thread(target=self.recharge)
         self.recharge_thread.start()
 
@@ -59,8 +61,8 @@ class Rack:
                     self.shelves[battery_position[0]][battery_position[1]]["level"]
                 )
                 self.shelves[battery_position[0]][battery_position[1]]["level"] = 0
-                self.shelves[battery_position[0]][battery_position[1]]["present"] = False
                 self.unlock_shelf(battery_position[0], battery_position[1])
+                self.shelves[battery_position[0]][battery_position[1]]["present"] = False
             else:
                 raise BatteryNotPresent
         return battery_levels
@@ -91,7 +93,9 @@ class Rack:
 
         eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
         """
+        # Searching for all positions which have charged batteries
         avlbl_positions = []
+        found_all = False
         for i, row in enumerate(self.shelves):
             for j, shelf in enumerate(row):
                 if (
@@ -101,10 +105,15 @@ class Rack:
                     avlbl_positions.append([i, j])
                     no_of_batteries -= 1
                     if no_of_batteries == 0:
-                        return avlbl_positions
+                        found_all = True
+                        break
+            if found_all:
+                break
         if no_of_batteries > 0:
             raise NotEnoughChargedBatteries
-        return avlbl_positions
+
+        # Withdrawing batteries from the found positions
+        return self.eject(avlbl_positions)
 
     def request_submission_of_batteries(self, no_of_batteries: int) -> list[list[int]]:
         """
@@ -114,19 +123,38 @@ class Rack:
 
         eg: no_of_batteries = 2 -> [ [1, 2], [4, 5] ]
         """
+        # Searching for all positions which are empty
         empty_positions = []
+        found_all = False
         for i, row in enumerate(self.shelves):
             for j, shelf in enumerate(row):
                 if not shelf["present"]:
-                    empty_positions.append([i, j])
+                    empty_positions.append(
+                        [i, j, generate_random_battery_level_for_battery_inserted_by_user()]
+                    )
                     no_of_batteries -= 1
                     if no_of_batteries == 0:
-                        return empty_positions
+                        found_all = True
+                        break
+            if found_all:
+                break
         if no_of_batteries > 0:
             raise NotEnoughEmptySlots
-        return empty_positions
 
-    def rack_stats(self):
+        # Submitting batteries for the found positions
+        self.submit(empty_positions)
+
+    def rack_stats(self) -> dict[str, int]:
+        """
+        This method returns the statistics about the rack, which are: total no of available batteries,
+        discharged batteries and empty shelves that do not have battery in them.
+
+        eg: Output: {
+            "charged_batteries": 20,
+            "undercharged_batteries": 2,
+            "empty_shelves": 3,
+        }
+        """
         # avlbl, undercharged, empty shelves
         charged_batteries, undercharged_batteries, empty_shelves = 0, 0, 0
 
