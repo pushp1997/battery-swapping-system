@@ -74,3 +74,8 @@ class TestViews(TestCase):
         client = Client()
         response = client.get(reverse("recharge_account"))
         self.assertTemplateUsed(response, "kiosk/user-recharge-payment.html")
+
+    def test_submit_battery(self):
+        client = Client()
+        response = client.get(reverse("submit_battery"))
+        self.assertTemplateUsed(response, "kiosk/submit_battery.html")
