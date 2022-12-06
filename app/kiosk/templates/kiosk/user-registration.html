@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/kiosk/user/register/" method="post">
+    <form id="registrationFrm" action="/kiosk/user/register/" method="post">
         {% csrf_token %}
         <div class="mb-3 mt-3">
             <label for="email" class="form-label">Email:</label>
@@ -42,7 +42,7 @@
         </div>
         <div class="d-flex justify-content-center flex-nowrap">
             <a type="cancel" class="btn btn-primary" href="{%url 'kiosk_index'%}" value="cancel">Cancel</a>
-            <button type="submit" class="btn btn-primary" style="margin-left: 10px;" value="submit">Next</button>
+            <button id="submitButton" type="submit" class="btn btn-primary" style="margin-left: 10px;" value="submit">Next</button>
         </div>
     </form>
 </div>

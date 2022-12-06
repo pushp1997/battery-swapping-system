@@ -9,7 +9,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="{%url 'submit_battery'%}" method="post">
+    <form id="submit_battery_form" action="{%url 'submit_battery'%}" method="post">
         {% csrf_token %}
         <br>
         <div class="mb-3 mt-3">

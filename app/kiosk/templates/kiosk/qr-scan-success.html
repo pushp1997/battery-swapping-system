@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/kiosk/user/dashboard/" method="post">
+    <form id="login_pin_form" action="/kiosk/user/dashboard/" method="post">
         {% csrf_token %}
         <div class="mb-3">
             <label for="enter-pin" class="form-label">Enter Pin:</label>

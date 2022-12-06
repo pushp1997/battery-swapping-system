@@ -6,7 +6,7 @@
 </div>
 <br />
 <div class="container">
-    <form action="/kiosk/" method="post">
+    <form id="registration_success_form" action="/kiosk/" method="post">
         {% csrf_token %}
         <img src="data:image/png;base64,{{ qr_img }}"
         class="rounded mx-auto d-block" alt="QRCode" />
